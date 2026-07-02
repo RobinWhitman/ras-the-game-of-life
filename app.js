@@ -1,5 +1,5 @@
 
-const KEY="ras_v5_3_2";
+const KEY="ras_v5_3_3";
 const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"🧠 Intelligence",domination:"👑 Domination",sante:"❤️ Santé"};
 const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
 const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
@@ -17,13 +17,13 @@ const defaultObjectives=[
 {id:"journal",period:"📜 DÉBRIEF",title:"Rapport de mission",desc:"Journée clôturée · notes rapides · préparation de demain",xp:30,glory:6,skill:"discipline",streak:"journal"}
 ];
 const achievements=[["Premier jour joué",s=>s.history.length>=1],["7 journées sauvegardées",s=>s.history.length>=7],["Level 10 atteint",s=>lvl(s.totalXp).level>=10],["250 Glory gagnées",s=>s.history.reduce((a,b)=>a+b.glory,0)>=250],["Série Training 7 jours",s=>s.streaks.training>=7],["Série Sommeil 7 jours",s=>s.streaks.sommeil>=7],["Journée parfaite 100%",s=>s.history.some(h=>h.pct===100)],["5 journées à 80%+",s=>s.history.filter(h=>h.pct>=80).length>=5],["Domination Lv.10",s=>Math.floor(s.skills.domination/100)+1>=10]];
-const defaultState={version:"5.0.1",totalXp:0,glory:0,skills:{force:0,discipline:0,intelligence:0,domination:0,sante:0},streaks:{training:0,lecture:0,sommeil:0,priere:0,apex:0,nutrition:0,journal:0},done:{},history:[],gloryLog:[],bossIndex:0,bossProgress:0,sound:false,player:null,onboarded:false};
+const defaultState={version:"5.0.1",totalXp:0,glory:0,skills:{force:0,discipline:0,intelligence:0,domination:0,sante:0},streaks:{training:0,lecture:0,sommeil:0,priere:0,apex:0,nutrition:0,journal:0},done:{},history:[],gloryLog:[],bossIndex:0,bossProgress:0,sound:false,music:false,player:null,onboarded:false};
 let state=load(), displayXp=0, displayGlory=0, displayLevel=1;
 function need(l){return Math.round(100*Math.pow(l,1.35))}
 function lvl(xp){let level=1,x=xp;while(x>=need(level)){x-=need(level);level++}return{level,current:x,needed:need(level)}}
 function load(){try{return {...structuredClone(defaultState),...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch{return structuredClone(defaultState)}}
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
-function show(id,btn){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".navbtn,.mobileNav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");render();setTimeout(()=>{companionSpeak(dialogueTypeForScreen(id));if(id==="qg")setCompanionDialogue("qg");},80);updateSoundButton()}
+function show(id,btn){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".navbtn,.mobileNav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");render();if(id==="qg"){setTimeout(()=>setCompanionDialogue("qg"),80)}updateSoundButton();updateMusicButton()}
 
 function toggleMoreMenu(force){
   if(!document.getElementById("moreMenu")) return;
@@ -232,9 +232,9 @@ function setCompanionDialogue(type="qg"){
   return text;
 }
 function playDialogueSound(){
-  if(typeof playSound==="function" && state.sound){
-    tone(523,0,.045,"triangle",.025);
-    tone(659,.05,.045,"triangle",.022);
+  if(typeof tone==="function" && state.sound){
+    tone(740,0,.035,"square",.018);
+    tone(620,.045,.035,"square",.015);
   }
 }
 
@@ -358,6 +358,48 @@ function updateSoundButton(){
   if(!document.getElementById("soundToggleBtn")) return;
   soundToggleBtn.textContent=state.sound?"🔊 Son ON":"🔇 Son OFF";
 }
+
+let musicOscillators=[];
+function toggleMusic(){
+  state.music=!state.music;
+  save();
+  updateMusicButton();
+  if(state.music) startMusic();
+  else stopMusic();
+}
+function updateMusicButton(){
+  if(!document.getElementById("musicToggleBtn")) return;
+  musicToggleBtn.textContent=state.music?"🎵 Music ON":"🎵 Music OFF";
+}
+function startMusic(){
+  if(!state.music) return;
+  stopMusic();
+  try{
+    const ctx=getAudio();
+    const master=ctx.createGain();
+    master.gain.setValueAtTime(.018,ctx.currentTime);
+    master.connect(ctx.destination);
+    const notes=[196,261.63,329.63];
+    notes.forEach((freq,i)=>{
+      const osc=ctx.createOscillator();
+      osc.type=i===0?"sine":"triangle";
+      osc.frequency.setValueAtTime(freq,ctx.currentTime);
+      const gain=ctx.createGain();
+      gain.gain.setValueAtTime(i===0?.45:.22,ctx.currentTime);
+      osc.connect(gain);
+      gain.connect(master);
+      osc.start();
+      musicOscillators.push({osc,gain,master});
+    });
+  }catch(e){}
+}
+function stopMusic(){
+  musicOscillators.forEach(o=>{
+    try{o.gain.gain.exponentialRampToValueAtTime(.001,getAudio().currentTime+.15);o.osc.stop(getAudio().currentTime+.2)}catch(e){}
+  });
+  musicOscillators=[];
+}
+
 function tone(freq,start,duration,type="square",gain=.08){
   if(!state.sound) return;
   const ctx=getAudio();
@@ -523,7 +565,7 @@ function royalReset(){
 let companionTimer=null;
 function scheduleCompanionAutoSpeak(){
   if(companionTimer) clearTimeout(companionTimer);
-  const delay=45000+Math.floor(Math.random()*45000);
+  const delay=70000+Math.floor(Math.random()*80000);
   companionTimer=setTimeout(()=>{
     const active=document.querySelector(".screen.active");
     const type=active?dialogueTypeForScreen(active.id):"idle";

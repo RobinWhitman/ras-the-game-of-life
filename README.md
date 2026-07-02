@@ -1,22 +1,20 @@
-# RAS — The Game of Life V5.3.2
+# RAS — The Game of Life V5.3.3
 
-Correction compagnon :
-- personnage entier, debout, sans cadre ;
-- bulle à gauche du personnage ;
-- plus de changement de phrase au clic ;
-- dialogues beaucoup plus nombreux ;
-- rotation automatique toutes les 45 à 90 secondes ;
-- compagnon global masqué sur l’écran QG ;
-- sur QG, c’est le héros du QG qui parle ;
-- légère animation idle du compagnon.
+Corrections :
+- le compagnon ne parle plus à chaque changement d’onglet ;
+- phrases automatiques toutes les 70 à 150 secondes ;
+- compagnon remonté en haut de l’écran ;
+- son de dialogue plus distinct ;
+- bouton Music ON/OFF ajouté au-dessus du bouton Son ;
+- musique d’ambiance simple activable/désactivable.
 
 ## Mise à jour GitHub
 Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
 
 ## Test
-1. Sur Ordres/Mission/etc : mini compagnon complet en haut à droite.
-2. La bulle est à gauche du personnage.
-3. Cliquer dessus ne change plus la phrase.
-4. Sur QG : le compagnon global disparaît.
-5. Sur QG : le grand avatar parle.
-6. Attends 45-90 secondes : phrase automatique.
+1. Changer d’onglet ne doit plus déclencher une phrase.
+2. Le compagnon doit être plus haut.
+3. Active Son ON puis accomplis une mission : dialogue plus distinct.
+4. Active Music ON/OFF.
+5. Attends 70–150 sec : phrase automatique.
+6. Teste sur smartphone après validation PC.

@@ -930,3 +930,63 @@ body.qg-active .globalCompanion{
 }
 
 #qg .companionBubble{display:none !important}
+
+
+/* V5.3.3 — Companion placement + music button */
+.globalCompanion{
+  top:10px !important;
+  right:20px !important;
+  align-items:flex-start !important;
+  z-index:760 !important;
+}
+.globalAvatarMini{
+  width:92px !important;
+  height:190px !important;
+}
+.globalAvatarMini .pixelHero{
+  transform:scale(.54) !important;
+}
+.globalDialogue{
+  margin-top:18px !important;
+  max-width:360px !important;
+}
+.musicToggleBtn{
+  position:fixed;
+  right:18px;
+  bottom:114px;
+  z-index:80;
+  background:linear-gradient(180deg,#303033,#151515);
+  color:var(--gold2);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:10px 14px;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 12px 28px rgba(0,0,0,.45);
+}
+@media(max-width:850px){
+  .globalCompanion{
+    top:8px !important;
+    right:8px !important;
+    max-width:88vw !important;
+  }
+  .globalAvatarMini{
+    width:50px !important;
+    height:112px !important;
+  }
+  .globalAvatarMini .pixelHero{
+    transform:scale(.31) !important;
+  }
+  .globalDialogue{
+    max-width:210px !important;
+    font-size:11px !important;
+    padding:8px 10px !important;
+    margin-top:10px !important;
+  }
+  .musicToggleBtn{
+    bottom:166px;
+    right:12px;
+    font-size:12px;
+    padding:9px 12px;
+  }
+}
