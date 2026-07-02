@@ -1,5 +1,5 @@
 
-const KEY="ras_v4_1_1";
+const KEY="ras_v5_0_1";
 const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"🧠 Intelligence",domination:"👑 Domination",sante:"❤️ Santé"};
 const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
 const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
@@ -17,13 +17,20 @@ const defaultObjectives=[
 {id:"journal",period:"📜 DÉBRIEF",title:"Rapport de mission",desc:"Journée clôturée · notes rapides · préparation de demain",xp:30,glory:6,skill:"discipline",streak:"journal"}
 ];
 const achievements=[["Premier jour joué",s=>s.history.length>=1],["7 journées sauvegardées",s=>s.history.length>=7],["Level 10 atteint",s=>lvl(s.totalXp).level>=10],["250 Glory gagnées",s=>s.history.reduce((a,b)=>a+b.glory,0)>=250],["Série Training 7 jours",s=>s.streaks.training>=7],["Série Sommeil 7 jours",s=>s.streaks.sommeil>=7],["Journée parfaite 100%",s=>s.history.some(h=>h.pct===100)],["5 journées à 80%+",s=>s.history.filter(h=>h.pct>=80).length>=5],["Domination Lv.10",s=>Math.floor(s.skills.domination/100)+1>=10]];
-const defaultState={totalXp:0,glory:0,skills:{force:0,discipline:0,intelligence:0,domination:0,sante:0},streaks:{training:0,lecture:0,sommeil:0,priere:0,apex:0,nutrition:0,journal:0},done:{},history:[],gloryLog:[],bossIndex:0,bossProgress:0,sound:false,player:null,onboarded:false};
+const defaultState={version:"5.0.1",totalXp:0,glory:0,skills:{force:0,discipline:0,intelligence:0,domination:0,sante:0},streaks:{training:0,lecture:0,sommeil:0,priere:0,apex:0,nutrition:0,journal:0},done:{},history:[],gloryLog:[],bossIndex:0,bossProgress:0,sound:false,player:null,onboarded:false};
 let state=load(), displayXp=0, displayGlory=0, displayLevel=1;
 function need(l){return Math.round(100*Math.pow(l,1.35))}
 function lvl(xp){let level=1,x=xp;while(x>=need(level)){x-=need(level);level++}return{level,current:x,needed:need(level)}}
 function load(){try{return {...structuredClone(defaultState),...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch{return structuredClone(defaultState)}}
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
 function show(id,btn){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".navbtn,.mobileNav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");render();updateSoundButton()}
+
+function toggleMoreMenu(force){
+  if(!document.getElementById("moreMenu")) return;
+  const show = typeof force==="boolean" ? force : !moreMenu.classList.contains("show");
+  moreMenu.classList.toggle("show",show);
+}
+
 function showById(id){show(id,null)}
 function init(){renderBossSelect();prefillToday();displayXp=state.totalXp;displayGlory=state.glory;displayLevel=lvl(state.totalXp).level;render()}
 function prefillToday(){missionTitle.textContent=dailyMissions[new Date().getDay()][0]}
@@ -198,7 +205,8 @@ function playSound(name){
 
 
 function checkOnboarding(){
-  if(!state.onboarded){
+  if(!state.player || !state.onboarded || state.version!=="5.0.1"){
+    state.onboarded=false;
     onboarding.classList.add("show");
     if(document.getElementById("splash")) splash.style.display="none";
   }
@@ -220,12 +228,13 @@ function bindCreatorPreview(){
 }
 function updateAvatarPreview(){
   if(!document.getElementById("avatarPreview")) return;
-  avatarPreview.className=`avatar ${charSkin.value} ${charHair.value} ${charBeard.value} ${charEyes.value} ${charTattoos.value}`;
+  avatarPreview.className=`avatar pixelHero ${charSkin.value} ${charHair.value} ${charBeard.value} ${charEyes.value} ${charTattoos.value}`;
   avatarNamePreview.textContent=charName.value || "Aventurier";
 }
 function saveCharacter(){
   state.player={name:charName.value||"Robin",gender:charGender.value,skin:charSkin.value,hair:charHair.value,beard:charBeard.value,eyes:charEyes.value,tattoos:charTattoos.value};
   state.onboarded=true;
+  state.version="5.0.1";
   save();
   onboarding.classList.remove("show");
   if(document.getElementById("splash")) splash.style.display="";
@@ -251,9 +260,12 @@ function modifyCharacter(){
 }
 function avatarHTML(){
   const p=state.player||{name:"Robin",skin:"skin-light",hair:"hair-dark",beard:"beard-full",eyes:"eyes-brown",tattoos:"tattoos-yes"};
-  return `<div class="avatar ${p.skin} ${p.hair} ${p.beard} ${p.eyes} ${p.tattoos}">
-    <div class="avatarHead"><div class="avatarHair"></div><div class="avatarEyes"></div><div class="avatarBeard"></div></div>
-    <div class="avatarBody"><div class="avatarTattoo left"></div><div class="avatarTattoo right"></div></div>
+  return `<div class="avatar pixelHero ${p.skin} ${p.hair} ${p.beard} ${p.eyes} ${p.tattoos}">
+    <div class="px hair"></div><div class="px head"></div><div class="px ear left"></div><div class="px ear right"></div>
+    <div class="px eye left"></div><div class="px eye right"></div><div class="px beard"></div><div class="px neck"></div>
+    <div class="px torso"></div><div class="px arm left"></div><div class="px arm right"></div>
+    <div class="px tattoo left"></div><div class="px tattoo right"></div><div class="px legs"></div><div class="px legGap"></div>
+    <div class="px boot left"></div><div class="px boot right"></div>
   </div><div class="avatarName">${p.name||"Robin"}</div>`;
 }
 
@@ -296,3 +308,4 @@ function royalReset(){
 
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
 init();
+checkOnboarding();

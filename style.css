@@ -315,3 +315,103 @@ input,textarea,select{width:100%;background:#101010;color:var(--text);border:1px
 .avatarName{color:var(--gold2);font-size:24px;font-weight:900;margin:12px 0}
 #qgAvatarMount .avatar{transform:scale(.72);margin-bottom:-28px}
 @media(max-width:850px){.creatorGrid{grid-template-columns:1fr}.onboardScreen p{font-size:18px}.avatar{width:190px;height:270px}}
+
+
+/* V5.0.1 — Navigation solution B + pixel avatar */
+.sidebar{
+  overflow:visible;
+}
+.moreMenu{
+  position:fixed;
+  left:126px;
+  top:110px;
+  z-index:850;
+  display:none;
+  width:230px;
+  background:linear-gradient(145deg,var(--panel2),var(--panel));
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:10px;
+  box-shadow:0 20px 60px rgba(0,0,0,.52);
+}
+.moreMenu.show{display:block;animation:screenIn .18s ease forwards}
+.moreMenu button{
+  width:100%;
+  display:block;
+  text-align:left;
+  margin:4px 0;
+  padding:12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.08);
+  cursor:pointer;
+  font-weight:800;
+}
+.moreMenu button:hover{
+  border-color:var(--line);
+  color:var(--gold2);
+}
+
+/* Pixel Hero */
+.pixelHero{
+  position:relative;
+  width:168px;
+  height:280px;
+  margin:0 auto 18px;
+  image-rendering:pixelated;
+  animation:avatarBreathe 2.8s ease-in-out infinite;
+}
+.pixelHero .px{
+  position:absolute;
+  box-shadow:none;
+}
+.pixelHero .head{
+  left:42px;top:52px;width:84px;height:76px;background:#d98d4f;
+}
+.skin-light .head,.skin-light .ear,.skin-light .neck,.skin-light .arm{background:#d98d4f}
+.skin-medium .head,.skin-medium .ear,.skin-medium .neck,.skin-medium .arm{background:#b87546}
+.skin-dark .head,.skin-dark .ear,.skin-dark .neck,.skin-dark .arm{background:#75462e}
+.pixelHero .ear.left{left:28px;top:84px;width:16px;height:38px}
+.pixelHero .ear.right{right:28px;top:84px;width:16px;height:38px}
+.pixelHero .hair{left:20px;top:12px;width:128px;height:78px;background:#3b2623;clip-path:polygon(14% 0,86% 0,86% 22%,100% 22%,100% 70%,86% 70%,86% 100%,72% 100%,72% 78%,28% 78%,28% 100%,14% 100%,14% 70%,0 70%,0 22%,14% 22%)}
+.hair-dark .hair{background:#3b2623}.hair-blond .hair{background:#c59c3b}.hair-bald .hair{display:none}
+.pixelHero .eye.left{left:58px;top:88px;width:12px;height:28px;background:#2b1f1a}
+.pixelHero .eye.right{right:58px;top:88px;width:12px;height:28px;background:#2b1f1a}
+.eyes-blue .eye{background:#2f6ca3}.eyes-green .eye{background:#2f7c50}
+.pixelHero .beard{left:58px;top:116px;width:52px;height:36px;background:#3b2623}
+.beard-short .beard{height:18px;top:128px}.beard-none .beard{display:none}
+.pixelHero .neck{left:70px;top:128px;width:30px;height:32px;background:#d98d4f}
+.pixelHero .torso{left:35px;top:152px;width:98px;height:92px;background:#9d422c}
+.pixelHero .arm.left{left:20px;top:164px;width:28px;height:84px;background:#d98d4f}
+.pixelHero .arm.right{right:20px;top:164px;width:28px;height:84px;background:#d98d4f}
+.pixelHero .tattoo.left{left:25px;top:182px;width:7px;height:42px;background:#1b1b1b}
+.pixelHero .tattoo.right{right:25px;top:182px;width:7px;height:42px;background:#1b1b1b}
+.tattoos-no .tattoo{display:none}
+.pixelHero .legs{left:50px;top:244px;width:68px;height:64px;background:#243746}
+.pixelHero .legGap{left:78px;top:270px;width:14px;height:40px;background:transparent}
+.pixelHero .boot.left{left:42px;top:306px;width:34px;height:28px;background:#563526}
+.pixelHero .boot.right{right:42px;top:306px;width:34px;height:28px;background:#563526}
+.avatarPreview .pixelHero{
+  transform:scale(1.1);
+  margin-bottom:42px;
+}
+#qgAvatarMount .pixelHero{
+  transform:scale(.82);
+  margin-bottom:12px;
+}
+@media(max-width:850px){
+  .moreMenu{
+    left:12px;
+    right:12px;
+    bottom:72px;
+    top:auto;
+    width:auto;
+  }
+  .mobileNav{
+    gap:4px;
+  }
+  .mobileNav button{
+    flex:1;
+  }
+}

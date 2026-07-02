@@ -49,9 +49,24 @@
         <button class="primary" onclick="saveCharacter()">Commencer l'aventure</button>
       </div>
       <div class="avatarPreview">
-        <div id="avatarPreview" class="avatar skin-light hair-dark beard-full eyes-brown tattoos-yes">
-          <div class="avatarHead"><div class="avatarHair"></div><div class="avatarEyes"></div><div class="avatarBeard"></div></div>
-          <div class="avatarBody"><div class="avatarTattoo left"></div><div class="avatarTattoo right"></div></div>
+        <div id="avatarPreview" class="avatar pixelHero skin-light hair-dark beard-full eyes-brown tattoos-yes">
+          <div class="px hair"></div>
+          <div class="px head"></div>
+          <div class="px ear left"></div>
+          <div class="px ear right"></div>
+          <div class="px eye left"></div>
+          <div class="px eye right"></div>
+          <div class="px beard"></div>
+          <div class="px neck"></div>
+          <div class="px torso"></div>
+          <div class="px arm left"></div>
+          <div class="px arm right"></div>
+          <div class="px tattoo left"></div>
+          <div class="px tattoo right"></div>
+          <div class="px legs"></div>
+          <div class="px legGap"></div>
+          <div class="px boot left"></div>
+          <div class="px boot right"></div>
         </div>
         <div id="avatarNamePreview" class="avatarName">Robin</div>
         <div class="rank">Aventurier — Niveau 1</div>
@@ -71,12 +86,9 @@
   <button class="navbtn active" title="Ordres du Jour" onclick="show('home',this)"><span>📜</span><small>Ordres</small></button>
   <button class="navbtn" title="QG" onclick="show('qg',this)"><span>🏰</span><small>QG</small></button>
   <button class="navbtn" title="Mission" onclick="show('mission',this)"><span>⚔</span><small>Mission</small></button>
-  <button class="navbtn" title="Archives" onclick="show('archives',this)"><span>📜</span><small>Archives</small></button>
   <button class="navbtn" title="Habiletés" onclick="show('abilities',this)"><span>🧠</span><small>Habiletés</small></button>
   <button class="navbtn" title="Boss" onclick="show('boss',this)"><span>👑</span><small>Boss</small></button>
-  <button class="navbtn" title="Hall des Succès" onclick="show('achievements',this)"><span>🏆</span><small>Succès</small></button>
-  <button class="navbtn" title="Marchand" onclick="show('shop',this)"><span>⚜</span><small>Marchand</small></button>
-  <button class="navbtn" title="Rapport Hebdomadaire" onclick="show('weekly',this)"><span>📊</span><small>Rapport</small></button>
+  <button class="navbtn" title="Plus" onclick="toggleMoreMenu()"><span>⋮</span><small>Plus</small></button>
 </aside>
 
 <main class="main">
@@ -189,12 +201,20 @@
 </main>
 </div>
 
+<div id="moreMenu" class="moreMenu">
+  <button onclick="showById('shop');toggleMoreMenu(false)">⚜ Marchand</button>
+  <button onclick="showById('achievements');toggleMoreMenu(false)">🏆 Hall des Succès</button>
+  <button onclick="showById('weekly');toggleMoreMenu(false)">📊 Rapport Hebdomadaire</button>
+  <button onclick="showById('archives');toggleMoreMenu(false)">📜 Archives</button>
+  <button onclick="openKingAccess();toggleMoreMenu(false)">♛ Accès du Roi</button>
+</div>
+
 <div class="mobileNav">
-  <button class="active" onclick="show('home',this)">📜</button><button onclick="show('qg',this)">🏰</button>
+  <button class="active" onclick="show('home',this)">📜</button>
+  <button onclick="show('qg',this)">🏰</button>
   <button onclick="show('mission',this)">⚔</button>
-  <button onclick="show('archives',this)">📜</button>
   <button onclick="show('abilities',this)">🧠</button>
-  <button onclick="show('shop',this)">⚜</button>
+  <button onclick="toggleMoreMenu()">⋮</button>
 </div>
 
 <button id="soundToggleBtn" class="soundToggleBtn" onclick="toggleSound()">🔇 Son OFF</button>
