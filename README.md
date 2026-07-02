@@ -1,25 +1,22 @@
-# RAS — The Game of Life V4.1.5
+# RAS — The Game of Life V4.1.6
 
-Ajouts :
-- logo augmenté sur splash, QG et barre gauche ;
-- navigation renommée :
-  - QG
-  - Mission
-  - Archives
-  - Habiletés
-  - Boss
-  - Marchand
-  - Hall des Succès
-  - Rapport Hebdomadaire
-- écran Habiletés séparé ;
-- animation code incorrect dans Accès du Roi.
+Ajout sons synthétiques style rétro/SNES-like :
+- bouton Son ON/OFF ;
+- son mission accomplie ;
+- son mission complete ;
+- son level up ;
+- son accès du roi ;
+- son code incorrect ;
+- son achat marchand.
+
+Les sons sont générés dans le navigateur, pas issus d'un jeu existant.
 
 ## Mise à jour GitHub
 Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
 
 ## Test
-1. Vérifie que le logo est plus grand.
-2. Clique Accès du Roi.
-3. Entre un mauvais code : la fenêtre doit trembler + afficher CODE INCORRECT.
-4. Entre 2323 : accès ouvert.
-5. Vérifie les nouveaux noms de menus.
+1. Active Son ON.
+2. Clique ACCOMPLIR sur une mission.
+3. Termine la mission.
+4. Teste mauvais code Accès du Roi.
+5. Teste achat au marchand si assez de Glory.

@@ -17,13 +17,13 @@ const defaultObjectives=[
 {id:"journal",period:"📜 DÉBRIEF",title:"Rapport de mission",desc:"Journée clôturée · notes rapides · préparation de demain",xp:30,glory:6,skill:"discipline",streak:"journal"}
 ];
 const achievements=[["Premier jour joué",s=>s.history.length>=1],["7 journées sauvegardées",s=>s.history.length>=7],["Level 10 atteint",s=>lvl(s.totalXp).level>=10],["250 Glory gagnées",s=>s.history.reduce((a,b)=>a+b.glory,0)>=250],["Série Training 7 jours",s=>s.streaks.training>=7],["Série Sommeil 7 jours",s=>s.streaks.sommeil>=7],["Journée parfaite 100%",s=>s.history.some(h=>h.pct===100)],["5 journées à 80%+",s=>s.history.filter(h=>h.pct>=80).length>=5],["Domination Lv.10",s=>Math.floor(s.skills.domination/100)+1>=10]];
-const defaultState={totalXp:0,glory:0,skills:{force:0,discipline:0,intelligence:0,domination:0,sante:0},streaks:{training:0,lecture:0,sommeil:0,priere:0,apex:0,nutrition:0,journal:0},done:{},history:[],gloryLog:[],bossIndex:0,bossProgress:0};
+const defaultState={totalXp:0,glory:0,skills:{force:0,discipline:0,intelligence:0,domination:0,sante:0},streaks:{training:0,lecture:0,sommeil:0,priere:0,apex:0,nutrition:0,journal:0},done:{},history:[],gloryLog:[],bossIndex:0,bossProgress:0,sound:false};
 let state=load(), displayXp=0, displayGlory=0, displayLevel=1;
 function need(l){return Math.round(100*Math.pow(l,1.35))}
 function lvl(xp){let level=1,x=xp;while(x>=need(level)){x-=need(level);level++}return{level,current:x,needed:need(level)}}
 function load(){try{return {...structuredClone(defaultState),...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch{return structuredClone(defaultState)}}
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
-function show(id,btn){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".navbtn,.mobileNav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");render()}
+function show(id,btn){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".navbtn,.mobileNav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");render();updateSoundButton()}
 function showById(id){show(id,null)}
 function init(){renderBossSelect();prefillToday();displayXp=state.totalXp;displayGlory=state.glory;displayLevel=lvl(state.totalXp).level;render()}
 function prefillToday(){missionTitle.textContent=dailyMissions[new Date().getDay()][0]}
@@ -48,6 +48,7 @@ function toggleObjective(id){
   state.done[id]=!was;
   const o=defaultObjectives.find(x=>x.id===id);
   if(state.done[id]){
+    playSound("cling");
     flash(`+${o.xp} XP  +${o.glory} ⚜`);
     floatReward.textContent=`+${o.xp} XP   +${o.glory} ⚜`;
     floatReward.classList.remove('show');
@@ -96,7 +97,7 @@ function renderTrackers(){let last=state.history.slice(-31),last7=state.history.
 function renderWeekly(){let last7=state.history.slice(-7),xp=last7.reduce((a,b)=>a+b.xp,0),g=last7.reduce((a,b)=>a+b.glory,0),avg=last7.length?Math.round(last7.reduce((a,b)=>a+b.pct,0)/last7.length):0;weeklyStats.innerHTML=`<div class="stat"><span>Missions</span><strong>${last7.length}/7</strong></div><div class="stat"><span>XP</span><strong>+${xp}</strong></div><div class="stat"><span>Glory</span><strong>+${g} ⚜</strong></div><div class="stat"><span>Moyenne</span><strong>${avg}%</strong></div>`;weeklyStreaks.innerHTML=Object.entries(state.streaks).map(([k,v])=>`<div class="stat"><span>🔥 ${cap(k)}</span><strong>${v} j</strong></div>`).join("")}
 function saveDay(){let c=calc(),pct=c.total?Math.round(c.done/c.total*100):0,before=lvl(state.totalXp).level;state.totalXp+=c.xp;state.glory+=c.glory;Object.keys(c.sg).forEach(k=>state.skills[k]+=c.sg[k]);defaultObjectives.forEach(o=>{if(o.streak){if(state.done[o.id])state.streaks[o.streak]=(state.streaks[o.streak]||0)+1;else if(["training","sommeil","apex"].includes(o.streak))state.streaks[o.streak]=0}});state.history.push({date:new Date().toISOString().slice(0,10),xp:c.xp,glory:c.glory,pct,done:c.done,total:c.total,doneIds:c.ids,mainQuest:missionTitle.textContent||""});state.done={};save();displayXp=state.totalXp-c.xp;displayGlory=state.glory-c.glory;render();showMissionComplete(c.xp,c.glory);if(lvl(state.totalXp).level>before)setTimeout(()=>showLevelUp(lvl(state.totalXp).level),1800)}
 function resetDay(){state.done={};save();render()}
-function buy(n,c){if(state.glory<c){alert("Pas assez de Glory.");return}state.glory-=c;state.gloryLog.push({date:new Date().toISOString().slice(0,10),name:n,cost:c});save();flash("ACHAT CONFIRMÉ");render()}
+function buy(n,c){if(state.glory<c){alert("Pas assez de Glory.");return}state.glory-=c;state.gloryLog.push({date:new Date().toISOString().slice(0,10),name:n,cost:c});save();playSound("buy");flash("ACHAT CONFIRMÉ");render()}
 function flash(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1200)}
 
 function showMissionComplete(xp,glory){
@@ -111,11 +112,83 @@ function showMissionComplete(xp,glory){
     p.style.animationDuration=(1.4+Math.random()*1.3)+"s";
     particleLayer.appendChild(p);
   }
+  playSound("complete");
   missionCompleteOverlay.classList.add("show");
   setTimeout(()=>missionCompleteOverlay.classList.remove("show"),2600);
 }
 
-function showLevelUp(n){levelUpNumber.textContent=n;levelOverlay.classList.add("show");setTimeout(()=>levelOverlay.classList.remove("show"),1500)}
+function showLevelUp(n){levelUpNumber.textContent=n;playSound("level");
+  levelOverlay.classList.add("show");setTimeout(()=>levelOverlay.classList.remove("show"),1500)}
+
+
+let audioCtx=null;
+function getAudio(){
+  if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+function toggleSound(){
+  state.sound=!state.sound;
+  save();
+  updateSoundButton();
+  if(state.sound) playSound("king");
+}
+function updateSoundButton(){
+  if(!document.getElementById("soundToggleBtn")) return;
+  soundToggleBtn.textContent=state.sound?"🔊 Son ON":"🔇 Son OFF";
+}
+function tone(freq,start,duration,type="square",gain=.08){
+  if(!state.sound) return;
+  const ctx=getAudio();
+  const osc=ctx.createOscillator();
+  const g=ctx.createGain();
+  osc.type=type;
+  osc.frequency.setValueAtTime(freq,ctx.currentTime+start);
+  g.gain.setValueAtTime(0,ctx.currentTime+start);
+  g.gain.linearRampToValueAtTime(gain,ctx.currentTime+start+.015);
+  g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+start+duration);
+  osc.connect(g);
+  g.connect(ctx.destination);
+  osc.start(ctx.currentTime+start);
+  osc.stop(ctx.currentTime+start+duration+.03);
+}
+function playSound(name){
+  if(!state.sound) return;
+  try{
+    getAudio();
+    if(name==="cling"){
+      tone(659,0,.09,"square",.07);
+      tone(988,.08,.11,"square",.06);
+      tone(1318,.16,.16,"triangle",.05);
+    }
+    if(name==="complete"){
+      tone(523,0,.12,"square",.07);
+      tone(659,.11,.12,"square",.07);
+      tone(784,.22,.16,"square",.07);
+      tone(1046,.38,.28,"triangle",.06);
+    }
+    if(name==="level"){
+      tone(523,0,.09,"square",.07);
+      tone(659,.09,.09,"square",.07);
+      tone(784,.18,.09,"square",.07);
+      tone(1046,.27,.14,"square",.07);
+      tone(1318,.43,.28,"triangle",.06);
+    }
+    if(name==="wrong"){
+      tone(160,0,.13,"sawtooth",.06);
+      tone(120,.12,.18,"sawtooth",.05);
+    }
+    if(name==="king"){
+      tone(392,0,.08,"triangle",.05);
+      tone(523,.08,.10,"triangle",.05);
+      tone(784,.18,.16,"triangle",.05);
+    }
+    if(name==="buy"){
+      tone(988,0,.07,"square",.055);
+      tone(784,.08,.07,"square",.05);
+      tone(1174,.17,.11,"triangle",.05);
+    }
+  }catch(e){}
+}
 
 function openKingAccess(){
   kingModal.classList.add("show");
@@ -131,11 +204,13 @@ function validateKingAccess(){
   box.classList.remove("wrong");
   if(kingCode.value==="2323"){
     kingPanel.classList.add("show");
+    playSound("king");
     flash("ACCÈS DU ROI OUVERT");
   }else{
     void box.offsetWidth;
     box.classList.add("wrong");
     kingError.classList.add("show");
+    playSound("wrong");
     flash("CODE REFUSÉ");
   }
 }

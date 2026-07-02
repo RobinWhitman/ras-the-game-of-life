@@ -261,3 +261,28 @@ input,textarea,select{width:100%;background:#101010;color:var(--text);border:1px
   .splash-logo{width:min(390px,86vw)}
   .mobileNav button small{display:none}
 }
+
+
+/* V4.1.6 — Sound toggle */
+.soundToggleBtn{
+  position:fixed;
+  right:18px;
+  bottom:66px;
+  z-index:80;
+  background:linear-gradient(180deg,#303033,#151515);
+  color:var(--gold2);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:10px 14px;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 12px 28px rgba(0,0,0,.45);
+}
+@media(max-width:850px){
+  .soundToggleBtn{
+    bottom:122px;
+    right:12px;
+    font-size:12px;
+    padding:9px 12px;
+  }
+}
