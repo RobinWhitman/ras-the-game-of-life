@@ -415,3 +415,121 @@ input,textarea,select{width:100%;background:#101010;color:var(--text);border:1px
     flex:1;
   }
 }
+
+
+/* V5.0.2 — Character creator fixes */
+.createCharacterBtn{
+  width:100%;
+  margin-top:22px;
+  font-size:18px;
+  padding:16px 20px;
+  position:sticky;
+  bottom:0;
+  z-index:5;
+  box-shadow:0 0 24px rgba(200,162,58,.25),0 12px 26px rgba(0,0,0,.45);
+}
+.creatorPanel{
+  max-height:78vh;
+  overflow:auto;
+  padding-bottom:28px;
+}
+
+/* Better eyes */
+.pixelHero .eye.left,
+.pixelHero .eye.right{
+  top:88px;
+  width:14px;
+  height:18px;
+  border-radius:0;
+  background:#3a2115;
+  box-shadow:inset 0 5px 0 rgba(255,255,255,.16);
+}
+.pixelHero .eye.left{left:56px}
+.pixelHero .eye.right{right:56px}
+.eyes-blue .eye.left,
+.eyes-blue .eye.right{background:#2f73b8}
+.eyes-green .eye.left,
+.eyes-green .eye.right{background:#2f8f5a}
+.eyes-brown .eye.left,
+.eyes-brown .eye.right{background:#4b2b16}
+
+/* Better beard */
+.pixelHero .beard{
+  left:50px;
+  top:112px;
+  width:68px;
+  height:48px;
+  background:#3b2623;
+  clip-path:polygon(0 0,100% 0,100% 58%,82% 58%,82% 100%,18% 100%,18% 58%,0 58%);
+  z-index:4;
+}
+.beard-short .beard{
+  left:52px;
+  top:124px;
+  width:64px;
+  height:24px;
+  clip-path:polygon(0 0,100% 0,86% 100%,14% 100%);
+  z-index:4;
+}
+.beard-none .beard{display:none}
+
+/* Mouth / face separation */
+.pixelHero .head:after{
+  content:"";
+  position:absolute;
+  left:36px;
+  bottom:16px;
+  width:20px;
+  height:5px;
+  background:rgba(70,35,24,.45);
+}
+.beard-full .head:after,
+.beard-short .head:after{
+  display:none;
+}
+
+/* Better tattoos: pixel bands instead of ugly lines */
+.pixelHero .tattoo{
+  width:18px;
+  height:46px;
+  background:
+    linear-gradient(180deg,
+      transparent 0 10%,
+      rgba(20,20,20,.75) 10% 18%,
+      transparent 18% 34%,
+      rgba(20,20,20,.75) 34% 42%,
+      transparent 42% 58%,
+      rgba(20,20,20,.75) 58% 66%,
+      transparent 66% 100%);
+  border-radius:0;
+  opacity:.85;
+}
+.pixelHero .tattoo.left{left:23px;top:178px}
+.pixelHero .tattoo.right{right:23px;top:178px}
+.tattoos-no .tattoo{display:none}
+
+/* Cleaner body proportions */
+.pixelHero .torso{
+  border:0;
+  box-shadow:inset 0 -10px 0 rgba(0,0,0,.18);
+}
+.pixelHero .arm.left,
+.pixelHero .arm.right{
+  height:78px;
+  top:168px;
+}
+.pixelHero .neck{
+  z-index:1;
+}
+.avatarPreview .pixelHero{
+  margin-top:10px;
+}
+@media(max-width:850px){
+  .creatorPanel{
+    max-height:none;
+    overflow:visible;
+  }
+  .createCharacterBtn{
+    position:relative;
+  }
+}
