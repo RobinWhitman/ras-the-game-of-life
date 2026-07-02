@@ -1173,3 +1173,121 @@ body.qg-active .globalCompanion{
     max-width:190px !important;
   }
 }
+
+
+/* V5.3.7 — HARD companion positioning, independent bubble/avatar */
+.globalCompanion{
+  position:fixed !important;
+  top:0 !important;
+  right:0 !important;
+  width:0 !important;
+  height:0 !important;
+  max-width:none !important;
+  display:block !important;
+  z-index:900 !important;
+  pointer-events:none !important;
+}
+.globalDialogue{
+  position:fixed !important;
+  top:18px !important;
+  right:190px !important;
+  width:360px !important;
+  max-width:360px !important;
+  margin:0 !important;
+  z-index:902 !important;
+}
+.globalDialogue:before{
+  left:100% !important;
+  right:auto !important;
+  top:28px !important;
+  transform:translateX(-7px) rotate(45deg) !important;
+}
+.globalAvatarMini{
+  position:fixed !important;
+  top:18px !important;
+  right:54px !important;
+  width:112px !important;
+  height:230px !important;
+  min-width:112px !important;
+  margin:0 !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  overflow:visible !important;
+  z-index:901 !important;
+}
+.globalAvatarMini .pixelHero{
+  position:absolute !important;
+  top:0 !important;
+  left:0 !important;
+  transform:scale(.54) !important;
+  transform-origin:top left !important;
+  display:block !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+.globalAvatarMini .avatarName{display:none !important}
+
+body.qg-active .globalCompanion,
+body.qg-active .globalDialogue,
+body.qg-active .globalAvatarMini{
+  display:none !important;
+}
+
+@media(max-width:850px){
+  .globalDialogue{
+    position:fixed !important;
+    top:10px !important;
+    right:72px !important;
+    width:220px !important;
+    max-width:220px !important;
+    font-size:11px !important;
+    line-height:1.22 !important;
+    padding:8px 10px !important;
+    z-index:902 !important;
+  }
+  .globalDialogue:before{
+    top:20px !important;
+  }
+  .globalAvatarMini{
+    position:fixed !important;
+    top:8px !important;
+    right:8px !important;
+    width:54px !important;
+    height:116px !important;
+    min-width:54px !important;
+    display:block !important;
+    background:transparent !important;
+    border:0 !important;
+    box-shadow:none !important;
+    overflow:visible !important;
+    z-index:901 !important;
+  }
+  .globalAvatarMini .pixelHero{
+    position:absolute !important;
+    top:0 !important;
+    left:0 !important;
+    transform:scale(.27) !important;
+    transform-origin:top left !important;
+    display:block !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+}
+@media(max-width:430px){
+  .globalDialogue{
+    right:62px !important;
+    width:205px !important;
+    max-width:205px !important;
+  }
+  .globalAvatarMini{
+    right:6px !important;
+    width:48px !important;
+    height:106px !important;
+  }
+  .globalAvatarMini .pixelHero{
+    transform:scale(.24) !important;
+  }
+}

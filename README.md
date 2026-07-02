@@ -1,15 +1,16 @@
-# RAS — The Game of Life V5.3.6
+# RAS — The Game of Life V5.3.7
 
-Corrections :
-- compagnon déplacé à gauche sur PC pour ne plus sortir de l’écran ;
-- mobile : carré noir supprimé, sprite réduit/recentré ;
-- musique : même air, mais instrument remplacé par fanfare rétro 16-bit + glockenspiel cristallin avec écho.
+Correction FORCÉE :
+- placement du compagnon séparé de la bulle en position fixed ;
+- PC : avatar forcé dans l’écran ;
+- mobile : avatar forcé visible à droite, sans carré noir ;
+- bouton musique affiche 🎺 pour confirmer que la version est bien chargée ;
+- musique beaucoup plus fanfare rétro 16-bit + glockenspiel/écho.
 
-## Mise à jour GitHub
-Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
-
-## Test
-1. PC : compagnon entièrement visible.
-2. Mobile : personnage visible, pas de carré noir.
-3. Mobile : sprite aligné proprement.
-4. Music ON : timbre plus fanfare/16-bit + notes cristallines.
+## Test important
+Après upload GitHub + Netlify :
+1. Attends le déploiement complet.
+2. Recharge avec Ctrl+F5 sur PC.
+3. Sur iPhone, ferme l’onglet et rouvre le site.
+4. Vérifie que le bouton dit 🎺 Music OFF/ON.
+Si le bouton dit encore 🎵 Music, c’est que l’ancienne version est encore en cache.
