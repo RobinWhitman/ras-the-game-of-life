@@ -606,16 +606,14 @@ input,textarea,select{width:100%;background:#101010;color:var(--text);border:1px
 .tattoos-no .tattoo:after{display:none}
 
 
-/* V5.0.5 — emergency stable fix: gender + full skin + beard color */
+/* V5.0.6 — Emergency rollback stable + safe visual fixes */
+
+/* Color skin applies correctly to face / ears / neck / arms */
 .skin-light .head,.skin-light .ear,.skin-light .neck,.skin-light .arm{background:#d98d4f !important}
 .skin-medium .head,.skin-medium .ear,.skin-medium .neck,.skin-medium .arm{background:#b87546 !important}
 .skin-dark .head,.skin-dark .ear,.skin-dark .neck,.skin-dark .arm{background:#75462e !important}
 
-.beard-dark .beard{background:#3b2623 !important}
-.beard-blond .beard{background:#c59c3b !important}
-.beard-red .beard{background:#8f3f27 !important}
-.beard-grey .beard{background:#777 !important}
-
+/* Better female visual WITHOUT touching JS */
 .gender-female .hair{
   height:100px;
   top:10px;
