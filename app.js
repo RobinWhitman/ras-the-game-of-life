@@ -1,5 +1,5 @@
 
-const KEY="ras_v5_3_1";
+const KEY="ras_v5_3_2";
 const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"🧠 Intelligence",domination:"👑 Domination",sante:"❤️ Santé"};
 const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
 const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
@@ -109,43 +109,112 @@ function animateNumber(from,to,duration,onUpdate,onDone){
 const companionDialogues={
   morning:[
     "Une nouvelle journée commence.",
-    "Chaque mission accomplie renforce ton personnage.",
+    "Tes ordres sont prêts.",
     "Aujourd’hui, avance sans négocier avec la faiblesse.",
+    "Chaque mission accomplie renforce ton personnage.",
     "Un Roi ne gagne pas par hasard. Il répète ses protocoles.",
-    "Tes ordres sont prêts. À toi de jouer."
+    "Lève-toi, respire, exécute.",
+    "Le royaume se construit dès les premières actions.",
+    "Commence proprement. Le reste suivra.",
+    "Aujourd’hui, tu n’as pas besoin d’être parfait. Tu dois avancer.",
+    "Ton futur toi observe ce que tu fais maintenant.",
+    "Une journée claire vaut mieux qu’une journée subie.",
+    "Le premier pas est souvent le plus important.",
+    "Tu ouvres les portes. À toi de conquérir la journée.",
+    "Prépare-toi. Les petites actions forgent les grandes victoires.",
+    "La discipline commence avant l’envie."
   ],
   qg:[
     "Tes ordres sont prêts.",
     "Le royaume se construit mission après mission.",
     "Tu n’as pas besoin d’être parfait. Tu dois avancer.",
     "La discipline est ton arme principale.",
-    "Le Boss ne tombera pas tout seul."
+    "Le Boss ne tombera pas tout seul.",
+    "Regarde ton niveau. Il raconte tes choix.",
+    "La Glory se gagne. Elle ne se réclame pas.",
+    "Chaque retour au QG doit servir à repartir plus fort.",
+    "Ne confonds pas repos et fuite.",
+    "Tu es ici pour structurer la journée, pas pour la subir.",
+    "Un système solide bat une motivation fragile.",
+    "Le QG est calme. La mission ne l’est pas.",
+    "Tes habitudes sont ton armure invisible.",
+    "Chaque protocole validé fortifie le royaume.",
+    "Tu es plus proche du prochain niveau que tu ne le crois."
   ],
   mission:[
     "Une mission à la fois.",
     "Concentre-toi sur celle-ci. Le reste attendra.",
     "Valide proprement. Puis passe à la suivante.",
     "C’est ici que l’XP se gagne.",
-    "La prochaine victoire est juste devant toi."
+    "La prochaine victoire est juste devant toi.",
+    "Ne regarde pas toute la montagne. Pose le pied suivant.",
+    "Une action claire. Pas de négociation.",
+    "Chaque mission terminée retire du pouvoir au chaos.",
+    "La constance est plus brutale que l’intensité.",
+    "Tu n’as pas besoin d’être motivé. Tu dois exécuter.",
+    "Ce n’est pas énorme. C’est nécessaire.",
+    "Le jeu avance quand tu agis.",
+    "Une case de plus, un niveau plus proche.",
+    "Fais simple. Fais propre. Fais maintenant.",
+    "La mission actuelle est la seule qui compte."
   ],
   success:[
     "Bien joué.",
     "Mission accomplie.",
     "Une de moins. Continue.",
     "Le système fonctionne quand tu l’appliques.",
-    "Ton personnage progresse."
+    "Ton personnage progresse.",
+    "Voilà. C’est comme ça qu’on gagne.",
+    "XP méritée.",
+    "Ce petit geste compte plus que tu ne le crois.",
+    "La série respire encore.",
+    "Le Boss vient de perdre du terrain.",
+    "Tu viens de renforcer ton identité.",
+    "Encore une preuve que tu peux tenir.",
+    "Reste dans le rythme.",
+    "La prochaine mission t’attend.",
+    "Ce n’était pas spectaculaire. C’était efficace."
   ],
   complete:[
     "Toutes les missions sont accomplies.",
     "Retourne au QG. La journée est presque scellée.",
     "Le Boss a senti le coup passer.",
     "Belle exécution.",
-    "Mission complète. Reviens demain plus fort."
+    "Mission complète. Reviens demain plus fort.",
+    "La journée est validée. Respecte le travail accompli.",
+    "Tu as gagné ton repos.",
+    "Le royaume avance.",
+    "C’est ce genre de journée qui change une trajectoire.",
+    "Demain, on recommence.",
+    "Aujourd’hui, tu as nourri le personnage.",
+    "Tu peux clôturer la journée proprement.",
+    "Le système a été respecté.",
+    "C’est une victoire réelle, même si personne ne l’a vue.",
+    "Fin de mission. Retour au calme."
   ],
   streak:[
     "La série continue. Ne la casse pas.",
     "Chaque jour validé rend le suivant plus facile.",
-    "Tu construis une dynamique dangereuse pour tes anciennes excuses."
+    "Tu construis une dynamique dangereuse pour tes anciennes excuses.",
+    "La série est une lame. Garde-la affûtée.",
+    "Un jour raté peut arriver. Deux deviennent une habitude.",
+    "Protège ta série comme un trésor.",
+    "La continuité est ta plus grosse arme.",
+    "Tu n’es plus en train d’essayer. Tu construis.",
+    "La série parle pour toi.",
+    "Reste fidèle au protocole."
+  ],
+  idle:[
+    "Je surveille la progression.",
+    "On avance quand tu avances.",
+    "Pas besoin de bruit. Juste de l’exécution.",
+    "Je reste là. À toi d’agir.",
+    "Le prochain niveau attend.",
+    "Chaque choix laisse une trace.",
+    "Ton personnage devient ce que tu répètes.",
+    "Le royaume n’aime pas l’improvisation.",
+    "Une bonne journée commence par une bonne décision.",
+    "Le calme avant la prochaine mission."
   ]
 };
 function pickDialogue(type="qg"){
@@ -183,15 +252,22 @@ function dialogueTypeForScreen(id){
 function renderGlobalCompanion(){
   if(!document.getElementById("globalCompanion")) return;
   globalAvatarMini.innerHTML=avatarHTML();
+  const active=document.querySelector(".screen.active");
+  const isQG=active && active.id==="qg";
+  document.body.classList.toggle("qg-active",isQG);
   if(!globalDialogue.dataset.ready){
     globalDialogue.dataset.ready="1";
-    globalDialogue.textContent=pickDialogue("qg");
+    globalDialogue.textContent=pickDialogue("idle");
   }
 }
 function companionSpeak(type="qg"){
-  if(type==="manual") type="qg";
   const text=pickDialogue(type);
-  if(document.getElementById("globalDialogue")){
+  if(document.body.classList.contains("qg-active") && document.getElementById("qgHeroDialogue")){
+    qgHeroDialogue.textContent=text;
+    qgHeroDialogue.classList.remove("speak");
+    void qgHeroDialogue.offsetWidth;
+    qgHeroDialogue.classList.add("speak");
+  }else if(document.getElementById("globalDialogue")){
     globalDialogue.textContent=text;
     globalDialogue.classList.remove("speak");
     void globalDialogue.offsetWidth;
@@ -223,6 +299,7 @@ function render(){
   if(document.getElementById("qgBoss")) qgBoss.textContent=bosses[state.bossIndex][0];
   if(document.getElementById("qgAvatarMount")) qgAvatarMount.innerHTML=avatarHTML();
   if(document.getElementById("companionBubble") && !companionBubble.dataset.ready){companionBubble.dataset.ready="1";setCompanionDialogue("qg");}
+  if(document.getElementById("qgHeroDialogue") && !qgHeroDialogue.dataset.ready){qgHeroDialogue.dataset.ready="1";qgHeroDialogue.textContent=pickDialogue("qg");}
 
   renderGlobalCompanion();renderMissionCards();renderStats();renderBoss();renderShop();renderAchievements();renderWeekly();
 }
@@ -440,6 +517,19 @@ function royalReset(){
   closeKingAccess();
   render();
   flash("APPLICATION RÉINITIALISÉE");
+}
+
+
+let companionTimer=null;
+function scheduleCompanionAutoSpeak(){
+  if(companionTimer) clearTimeout(companionTimer);
+  const delay=45000+Math.floor(Math.random()*45000);
+  companionTimer=setTimeout(()=>{
+    const active=document.querySelector(".screen.active");
+    const type=active?dialogueTypeForScreen(active.id):"idle";
+    companionSpeak(type==="qg"?"idle":type);
+    scheduleCompanionAutoSpeak();
+  },delay);
 }
 
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
