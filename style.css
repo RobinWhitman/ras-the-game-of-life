@@ -604,3 +604,28 @@ input,textarea,select{width:100%;background:#101010;color:var(--text);border:1px
 .tattoos-no .tattoo,
 .tattoos-no .tattoo:before,
 .tattoos-no .tattoo:after{display:none}
+
+
+/* V5.0.4 — Gender, skin, beard color fixes */
+.skin-light .head,.skin-light .ear,.skin-light .neck,.skin-light .arm{background:#d98d4f !important}
+.skin-medium .head,.skin-medium .ear,.skin-medium .neck,.skin-medium .arm{background:#b87546 !important}
+.skin-dark .head,.skin-dark .ear,.skin-dark .neck,.skin-dark .arm{background:#75462e !important}
+
+.beard-dark .beard{background:#3b2623 !important}
+.beard-blond .beard{background:#c59c3b !important}
+.beard-red .beard{background:#8f3f27 !important}
+.beard-grey .beard{background:#777 !important}
+
+.gender-female .hair{
+  height:100px;
+  top:10px;
+  clip-path:polygon(10% 0,90% 0,90% 20%,100% 20%,100% 85%,84% 85%,84% 100%,68% 100%,68% 78%,32% 78%,32% 100%,16% 100%,16% 85%,0 85%,0 20%,10% 20%);
+}
+.gender-female .torso{
+  left:42px;
+  width:84px;
+  clip-path:polygon(18% 0,82% 0,100% 100%,0 100%);
+}
+.gender-female .arm.left{left:25px}
+.gender-female .arm.right{right:25px}
+.gender-female .beard{display:none !important}
