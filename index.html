@@ -119,6 +119,25 @@
   <button onclick="show('shop',this)">⚜</button>
 </div>
 
+<button id="kingAccessBtn" class="kingAccessBtn" onclick="openKingAccess()">♛ Accès du Roi</button>
+
+<div id="kingModal" class="kingModal">
+  <div class="kingBox">
+    <h2>♛ Accès du Roi</h2>
+    <p class="muted">Zone protégée. Code requis.</p>
+    <input id="kingCode" type="password" placeholder="Code administrateur" />
+    <div class="kingActions">
+      <button class="primary" onclick="validateKingAccess()">Entrer</button>
+      <button class="secondary" onclick="closeKingAccess()">Fermer</button>
+    </div>
+    <div id="kingPanel" class="kingPanel">
+      <h2>Commandes Royales</h2>
+      <button class="danger" onclick="royalReset()">Réinitialiser complètement l'application</button>
+      <p class="muted small">Action irréversible : XP, Glory, séries, archives, boss et missions seront effacés.</p>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="toast">+ XP</div>
 <div id="floatReward" class="floatReward">+100 XP</div>
 <div id="missionCompleteOverlay" class="missionCompleteOverlay">

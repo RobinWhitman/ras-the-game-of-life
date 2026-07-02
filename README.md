@@ -1,17 +1,18 @@
-# RAS — The Game of Life V4.1.3
+# RAS — The Game of Life V4.1.4
 
-Correction structure mission :
-- ajout des protocoles par période ;
-- matin / repas / savoir / training / business / soir / débrief ;
-- ajout "visage dans la glace" ;
-- ajout "dents après chaque repas" ;
-- missions regroupées par moment de journée.
+Ajouts :
+- logo PNG sans fond intégré ;
+- suppression du rendu carré noir ;
+- bouton Accès du Roi ;
+- code : 2323 ;
+- reset complet protégé.
 
-## À faire dans GitHub
-Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
+## Mise à jour GitHub
+Glisse tout le contenu du dossier extrait dans GitHub puis clique Commit changes.
 
 ## Test
-1. Va dans Mission.
-2. Vérifie que les cartes sont rangées par périodes.
-3. Valide un protocole.
-4. Vérifie que la carte passe en Accompli dans le bon groupe.
+1. Vérifie le logo sur le splash, le QG et la barre latérale.
+2. Clique Accès du Roi.
+3. Entre le code 2323.
+4. Vérifie que le panneau royal apparaît.
+5. Ne clique reset que si tu veux vraiment effacer la progression.

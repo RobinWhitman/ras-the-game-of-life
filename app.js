@@ -114,5 +114,35 @@ function showMissionComplete(xp,glory){
 }
 
 function showLevelUp(n){levelUpNumber.textContent=n;levelOverlay.classList.add("show");setTimeout(()=>levelOverlay.classList.remove("show"),1500)}
+
+function openKingAccess(){
+  kingModal.classList.add("show");
+  kingCode.value="";
+  kingPanel.classList.remove("show");
+}
+function closeKingAccess(){
+  kingModal.classList.remove("show");
+}
+function validateKingAccess(){
+  if(kingCode.value==="2323"){
+    kingPanel.classList.add("show");
+    flash("ACCÈS DU ROI OUVERT");
+  }else{
+    flash("CODE REFUSÉ");
+  }
+}
+function royalReset(){
+  if(!confirm("Réinitialiser complètement RAS — The Game of Life ?")) return;
+  if(!confirm("Dernière confirmation : cette action est irréversible.")) return;
+  localStorage.removeItem(KEY);
+  state=structuredClone(defaultState);
+  displayXp=0;
+  displayGlory=0;
+  displayLevel=1;
+  closeKingAccess();
+  render();
+  flash("APPLICATION RÉINITIALISÉE");
+}
+
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
 init();
