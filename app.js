@@ -17,7 +17,7 @@ const defaultObjectives=[
 {id:"journal",period:"📜 DÉBRIEF",title:"Rapport de mission",desc:"Journée clôturée · notes rapides · préparation de demain",xp:30,glory:6,skill:"discipline",streak:"journal"}
 ];
 const achievements=[["Premier jour joué",s=>s.history.length>=1],["7 journées sauvegardées",s=>s.history.length>=7],["Level 10 atteint",s=>lvl(s.totalXp).level>=10],["250 Glory gagnées",s=>s.history.reduce((a,b)=>a+b.glory,0)>=250],["Série Training 7 jours",s=>s.streaks.training>=7],["Série Sommeil 7 jours",s=>s.streaks.sommeil>=7],["Journée parfaite 100%",s=>s.history.some(h=>h.pct===100)],["5 journées à 80%+",s=>s.history.filter(h=>h.pct>=80).length>=5],["Domination Lv.10",s=>Math.floor(s.skills.domination/100)+1>=10]];
-const defaultState={totalXp:0,glory:0,skills:{force:0,discipline:0,intelligence:0,domination:0,sante:0},streaks:{training:0,lecture:0,sommeil:0,priere:0,apex:0,nutrition:0,journal:0},done:{},history:[],gloryLog:[],bossIndex:0,bossProgress:0,sound:false};
+const defaultState={totalXp:0,glory:0,skills:{force:0,discipline:0,intelligence:0,domination:0,sante:0},streaks:{training:0,lecture:0,sommeil:0,priere:0,apex:0,nutrition:0,journal:0},done:{},history:[],gloryLog:[],bossIndex:0,bossProgress:0,sound:false,player:null,onboarded:false};
 let state=load(), displayXp=0, displayGlory=0, displayLevel=1;
 function need(l){return Math.round(100*Math.pow(l,1.35))}
 function lvl(xp){let level=1,x=xp;while(x>=need(level)){x-=need(level);level++}return{level,current:x,needed:need(level)}}
@@ -79,6 +79,12 @@ function render(){
   animateNumber(displayGlory,targetGlory,450,v=>{displayGlory=v;gloryText.textContent=v+" ⚜"});
   let pct=c.total?Math.round(c.done/c.total*100):0;dayPct.textContent=pct+"%";dayFill.style.width=pct+"%";
   mainStreak.textContent=Math.max(...Object.values(state.streaks))+" j";homeBoss.textContent=bosses[state.bossIndex][0];
+  if(document.getElementById("qgLevel")) qgLevel.textContent=l.level;
+  if(document.getElementById("qgXpFill")) qgXpFill.style.width=`${Math.round(l.current/l.needed*100)}%`;
+  if(document.getElementById("qgGlory")) qgGlory.textContent=(state.glory+c.glory)+" ⚜";
+  if(document.getElementById("qgBoss")) qgBoss.textContent=bosses[state.bossIndex][0];
+  if(document.getElementById("qgAvatarMount")) qgAvatarMount.innerHTML=avatarHTML();
+
   renderMissionCards();renderStats();renderBoss();renderShop();renderAchievements();renderWeekly();
 }
 function renderStats(){
@@ -188,6 +194,67 @@ function playSound(name){
       tone(1174,.17,.11,"triangle",.05);
     }
   }catch(e){}
+}
+
+
+function checkOnboarding(){
+  if(!state.onboarded){
+    onboarding.classList.add("show");
+    if(document.getElementById("splash")) splash.style.display="none";
+  }
+}
+function nextIntro(n){
+  document.querySelectorAll(".onboardScreen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("intro"+n).classList.add("active");
+  if(n===4) bindCreatorPreview();
+}
+function bindCreatorPreview(){
+  ["charName","charGender","charSkin","charHair","charBeard","charEyes","charTattoos"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && !el.dataset.bound){
+      el.dataset.bound="1";
+      el.addEventListener("input",updateAvatarPreview);
+    }
+  });
+  updateAvatarPreview();
+}
+function updateAvatarPreview(){
+  if(!document.getElementById("avatarPreview")) return;
+  avatarPreview.className=`avatar ${charSkin.value} ${charHair.value} ${charBeard.value} ${charEyes.value} ${charTattoos.value}`;
+  avatarNamePreview.textContent=charName.value || "Aventurier";
+}
+function saveCharacter(){
+  state.player={name:charName.value||"Robin",gender:charGender.value,skin:charSkin.value,hair:charHair.value,beard:charBeard.value,eyes:charEyes.value,tattoos:charTattoos.value};
+  state.onboarded=true;
+  save();
+  onboarding.classList.remove("show");
+  if(document.getElementById("splash")) splash.style.display="";
+  render();
+  flash("PERSONNAGE CRÉÉ");
+  if(typeof playSound==="function") playSound("king");
+}
+function modifyCharacter(){
+  closeKingAccess();
+  const p=state.player||{};
+  onboarding.classList.add("show");
+  nextIntro(4);
+  setTimeout(()=>{
+    charName.value=p.name||"Robin";
+    charGender.value=p.gender||"Homme";
+    charSkin.value=p.skin||"skin-light";
+    charHair.value=p.hair||"hair-dark";
+    charBeard.value=p.beard||"beard-full";
+    charEyes.value=p.eyes||"eyes-brown";
+    charTattoos.value=p.tattoos||"tattoos-yes";
+    updateAvatarPreview();
+  },50);
+}
+function avatarHTML(){
+  const p=state.player||{name:"Robin",skin:"skin-light",hair:"hair-dark",beard:"beard-full",eyes:"eyes-brown",tattoos:"tattoos-yes"};
+  return `<div class="avatar ${p.skin} ${p.hair} ${p.beard} ${p.eyes} ${p.tattoos}">
+    <div class="avatarHead"><div class="avatarHair"></div><div class="avatarEyes"></div><div class="avatarBeard"></div></div>
+    <div class="avatarBody"><div class="avatarTattoo left"></div><div class="avatarTattoo right"></div></div>
+  </div><div class="avatarName">${p.name||"Robin"}</div>`;
 }
 
 function openKingAccess(){

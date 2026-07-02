@@ -7,6 +7,59 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+<div id="onboarding" class="onboarding">
+  <div id="intro1" class="onboardScreen active">
+    <img class="onboardLogo" src="assets/logo-premium.png" alt="RAS Logo" />
+    <h1>Bienvenue dans</h1>
+    <h1>RAS — THE GAME OF LIFE</h1>
+    <button class="primary" onclick="nextIntro(2)">Continuer</button>
+  </div>
+
+  <div id="intro2" class="onboardScreen">
+    <h1>L'expérience ne se gagne pas en terrassant des monstres.</h1>
+    <p>Elle se gagne en devenant une meilleure version de toi-même.</p>
+    <button class="primary" onclick="nextIntro(3)">Continuer</button>
+  </div>
+
+  <div id="intro3" class="onboardScreen">
+    <h1>Avant de commencer ton aventure...</h1>
+    <p>Créons ton personnage.</p>
+    <button class="primary" onclick="nextIntro(4)">Créer mon personnage</button>
+  </div>
+
+  <div id="intro4" class="onboardScreen">
+    <h1>Création du personnage</h1>
+    <div class="creatorGrid">
+      <div class="creatorPanel">
+        <label>Nom du personnage</label>
+        <input id="charName" type="text" value="Robin" />
+        <label>Sexe</label>
+        <select id="charGender"><option>Homme</option><option>Femme</option></select>
+        <label>Couleur de peau</label>
+        <select id="charSkin"><option value="skin-light">Claire</option><option value="skin-medium">Mate</option><option value="skin-dark">Foncée</option></select>
+        <label>Cheveux</label>
+        <select id="charHair"><option value="hair-dark">Bruns</option><option value="hair-blond">Blonds</option><option value="hair-bald">Rasé / chauve</option></select>
+        <label>Barbe</label>
+        <select id="charBeard"><option value="beard-full">Barbe complète</option><option value="beard-short">Barbe courte</option><option value="beard-none">Sans barbe</option></select>
+        <label>Yeux</label>
+        <select id="charEyes"><option value="eyes-brown">Marron</option><option value="eyes-blue">Bleus</option><option value="eyes-green">Verts</option></select>
+        <label>Tatouages</label>
+        <select id="charTattoos"><option value="tattoos-yes">Oui</option><option value="tattoos-no">Non</option></select>
+        <button class="primary" onclick="saveCharacter()">Commencer l'aventure</button>
+      </div>
+      <div class="avatarPreview">
+        <div id="avatarPreview" class="avatar skin-light hair-dark beard-full eyes-brown tattoos-yes">
+          <div class="avatarHead"><div class="avatarHair"></div><div class="avatarEyes"></div><div class="avatarBeard"></div></div>
+          <div class="avatarBody"><div class="avatarTattoo left"></div><div class="avatarTattoo right"></div></div>
+        </div>
+        <div id="avatarNamePreview" class="avatarName">Robin</div>
+        <div class="rank">Aventurier — Niveau 1</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="splash">
   <img class="splash-logo" src="assets/logo-premium.png" alt="RAS Logo" />
   <div class="splash-sub">THE GAME OF LIFE</div>
@@ -15,7 +68,8 @@
 <div class="app">
 <aside class="sidebar">
   <img class="side-logo" src="assets/logo-premium.png" alt="RAS" />
-  <button class="navbtn active" title="QG" onclick="show('home',this)"><span>🏰</span><small>QG</small></button>
+  <button class="navbtn active" title="Ordres du Jour" onclick="show('home',this)"><span>📜</span><small>Ordres</small></button>
+  <button class="navbtn" title="QG" onclick="show('qg',this)"><span>🏰</span><small>QG</small></button>
   <button class="navbtn" title="Mission" onclick="show('mission',this)"><span>⚔</span><small>Mission</small></button>
   <button class="navbtn" title="Archives" onclick="show('archives',this)"><span>📜</span><small>Archives</small></button>
   <button class="navbtn" title="Habiletés" onclick="show('abilities',this)"><span>🧠</span><small>Habiletés</small></button>
@@ -29,7 +83,7 @@
 <section id="home" class="screen active">
   <div class="hero">
     <div class="heroCard">
-      <div class="rank">QG PERSONNEL</div>
+      <div class="rank">📜 ORDRES DU JOUR</div>
       <img class="main-logo" src="assets/logo-premium.png" alt="RAS Logo" />
       <div class="subtitle">Become the highest level version of yourself.</div>
       <div class="level">LVL <span id="level">1</span></div>
@@ -40,8 +94,23 @@
       <div class="stat"><span>👑 Boss actif</span><strong id="homeBoss">—</strong></div>
       <div class="bar"><div class="fill" id="dayFill"></div></div>
       <div class="stat"><span>Progression Mission</span><strong id="dayPct">0%</strong></div>
-      <button class="primary" onclick="showById('mission')">▶ LANCER LA MISSION</button>
+      <button class="primary" onclick="showById('qg')">▶ COMMENCER L’AVENTURE</button>
       <button class="secondary" onclick="saveDay()">TERMINER LA MISSION</button>
+    </div>
+  </div>
+</section>
+
+
+<section id="qg" class="screen">
+  <div class="hero">
+    <div class="heroCard qgCard">
+      <div class="rank">🏰 QG</div>
+      <div id="qgAvatarMount"></div>
+      <div class="level">LVL <span id="qgLevel">1</span></div>
+      <div class="bar"><div class="fill" id="qgXpFill"></div></div>
+      <div class="stat"><span>⚜ Glory</span><strong id="qgGlory">0 ⚜</strong></div>
+      <div class="stat"><span>👑 Boss actif</span><strong id="qgBoss">—</strong></div>
+      <button class="primary" onclick="showById('mission')">⚔ PARTIR EN MISSION</button>
     </div>
   </div>
 </section>
@@ -121,7 +190,7 @@
 </div>
 
 <div class="mobileNav">
-  <button class="active" onclick="show('home',this)">🏰</button>
+  <button class="active" onclick="show('home',this)">📜</button><button onclick="show('qg',this)">🏰</button>
   <button onclick="show('mission',this)">⚔</button>
   <button onclick="show('archives',this)">📜</button>
   <button onclick="show('abilities',this)">🧠</button>
@@ -144,6 +213,7 @@
     <div id="kingPanel" class="kingPanel">
       <h2>Commandes Royales</h2>
       <button class="danger" onclick="royalReset()">Réinitialiser complètement l'application</button>
+      <button class="primary" onclick="modifyCharacter()">Modifier le personnage</button>
       <p class="muted small">Action irréversible : XP, Glory, séries, archives, boss et missions seront effacés.</p>
     </div>
   </div>

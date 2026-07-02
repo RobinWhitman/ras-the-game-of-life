@@ -1,22 +1,21 @@
-# RAS — The Game of Life V4.1.6
+# RAS — The Game of Life V5.0.0
 
-Ajout sons synthétiques style rétro/SNES-like :
-- bouton Son ON/OFF ;
-- son mission accomplie ;
-- son mission complete ;
-- son level up ;
-- son accès du roi ;
-- son code incorrect ;
-- son achat marchand.
-
-Les sons sont générés dans le navigateur, pas issus d'un jeu existant.
+Sprint 1 — The Player :
+- onboarding en français ;
+- écran de création du personnage ;
+- sexe, nom, peau, cheveux, barbe, yeux, tatouages ;
+- avatar visuel simple ;
+- sauvegarde automatique ;
+- Accès du Roi > Modifier le personnage ;
+- Ordres du Jour en première page ;
+- QG déplacé en seconde page.
 
 ## Mise à jour GitHub
 Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
 
 ## Test
-1. Active Son ON.
-2. Clique ACCOMPLIR sur une mission.
-3. Termine la mission.
-4. Teste mauvais code Accès du Roi.
-5. Teste achat au marchand si assez de Glory.
+1. Ouvre l'app : si nouveau stockage, onboarding apparaît.
+2. Crée ton personnage.
+3. Vérifie que tu arrives sur Ordres du Jour.
+4. Clique Commencer l'aventure : QG.
+5. Accès du Roi > 2323 > Modifier le personnage.
