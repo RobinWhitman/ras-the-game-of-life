@@ -1,15 +1,22 @@
-# RAS — The Game of Life V5.3.8
+# RAS — The Game of Life V5.4.0
 
-Correction musique :
-- garde l’instrument V5.3.7 : fanfare rétro 16-bit + glockenspiel cristallin ;
-- remplace l’air par une ligne plus proche de la version précédente, plus agréable ;
-- aucune modification du compagnon ou du reste de l’interface.
+V5.4 — QG vivant :
+- torches animées ;
+- particules dorées ;
+- lumière subtile ;
+- ambiance salle de commandement ;
+- héros mieux mis en scène ;
+- aucune modification du moteur principal.
+
+## Dialogues
+Bibliothèque actuelle : environ 80–90 phrases.
+Objectif futur : 300–400 phrases.
 
 ## Mise à jour GitHub
 Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
 
 ## Test
-1. Vérifie que le bouton affiche toujours 🎺 Music.
-2. Active Music ON.
-3. L’instrument doit rester fanfare/glockenspiel.
-4. L’air doit être plus proche de la version précédente.
+1. Va sur QG.
+2. Vérifie torches, particules, lumière.
+3. Vérifie que les boutons/missions/sons/musique fonctionnent toujours.
+4. Teste rapidement mobile.

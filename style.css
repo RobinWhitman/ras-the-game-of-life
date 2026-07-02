@@ -1291,3 +1291,101 @@ body.qg-active .globalAvatarMini{
     transform:scale(.24) !important;
   }
 }
+
+
+/* V5.4.0 — QG vivant */
+.qgCard{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(240,210,122,.16),transparent 34%),
+    radial-gradient(circle at 50% 85%,rgba(200,162,58,.08),transparent 40%),
+    linear-gradient(145deg,#252529,#0d0d0f) !important;
+}
+.qgAtmosphere{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+.qgCard > *:not(.qgAtmosphere){
+  position:relative;
+  z-index:2;
+}
+.qgLight{
+  position:absolute;
+  left:50%;
+  top:-120px;
+  width:420px;
+  height:420px;
+  transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(240,210,122,.20),rgba(200,162,58,.05) 38%,transparent 68%);
+  animation:qgLightPulse 5.5s ease-in-out infinite;
+}
+@keyframes qgLightPulse{
+  0%,100%{opacity:.45;transform:translateX(-50%) scale(.96)}
+  50%{opacity:.85;transform:translateX(-50%) scale(1.05)}
+}
+.torch{
+  position:absolute;
+  top:96px;
+  width:34px;
+  height:72px;
+  border-radius:8px;
+  background:linear-gradient(180deg,#3a2a1d,#111);
+  border:1px solid rgba(200,162,58,.22);
+}
+.torchLeft{left:36px}
+.torchRight{right:36px}
+.torch span{
+  position:absolute;
+  left:50%;
+  top:-34px;
+  width:34px;
+  height:46px;
+  transform:translateX(-50%);
+  background:
+    radial-gradient(circle at 50% 65%,#fff2a4 0 12%,#f0d27a 13% 26%,#c86b2d 35%,transparent 67%);
+  clip-path:polygon(50% 0,74% 30%,62% 52%,88% 100%,50% 82%,12% 100%,38% 52%,26% 30%);
+  filter:drop-shadow(0 0 16px rgba(240,210,122,.65));
+  animation:torchFlicker .24s infinite alternate;
+}
+@keyframes torchFlicker{
+  from{transform:translateX(-50%) scale(.92) rotate(-2deg);opacity:.78}
+  to{transform:translateX(-50%) scale(1.08) rotate(2deg);opacity:1}
+}
+.qgParticles i{
+  position:absolute;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:var(--gold2);
+  opacity:.0;
+  animation:qgParticle 6s linear infinite;
+}
+.qgParticles i:nth-child(1){left:18%;bottom:16%;animation-delay:.2s}
+.qgParticles i:nth-child(2){left:32%;bottom:12%;animation-delay:1.1s}
+.qgParticles i:nth-child(3){left:48%;bottom:18%;animation-delay:2.1s}
+.qgParticles i:nth-child(4){left:62%;bottom:13%;animation-delay:3.0s}
+.qgParticles i:nth-child(5){left:78%;bottom:17%;animation-delay:4.2s}
+.qgParticles i:nth-child(6){left:24%;bottom:8%;animation-delay:5.2s}
+.qgParticles i:nth-child(7){left:54%;bottom:9%;animation-delay:1.8s}
+.qgParticles i:nth-child(8){left:86%;bottom:10%;animation-delay:3.8s}
+@keyframes qgParticle{
+  0%{transform:translateY(0) scale(.6);opacity:0}
+  15%{opacity:.8}
+  70%{opacity:.45}
+  100%{transform:translateY(-260px) scale(1.1);opacity:0}
+}
+#qgAvatarMount .pixelHero{
+  filter:drop-shadow(0 18px 24px rgba(0,0,0,.45)) drop-shadow(0 0 20px rgba(200,162,58,.10));
+}
+.qgHeroDialogue{
+  box-shadow:0 18px 48px rgba(0,0,0,.45),0 0 35px rgba(200,162,58,.13) !important;
+}
+@media(max-width:850px){
+  .torchLeft{left:14px}
+  .torchRight{right:14px}
+  .torch{top:82px;transform:scale(.78)}
+  .qgLight{width:320px;height:320px}
+}
