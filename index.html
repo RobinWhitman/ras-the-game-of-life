@@ -15,13 +15,14 @@
 <div class="app">
 <aside class="sidebar">
   <img class="side-logo" src="assets/logo-premium.png" alt="RAS" />
-  <button class="navbtn active" onclick="show('home',this)">🏰</button>
-  <button class="navbtn" onclick="show('mission',this)">⚔</button>
-  <button class="navbtn" onclick="show('archives',this)">📈</button>
-  <button class="navbtn" onclick="show('boss',this)">👑</button>
-  <button class="navbtn" onclick="show('achievements',this)">🏆</button>
-  <button class="navbtn" onclick="show('shop',this)">⚜</button>
-  <button class="navbtn" onclick="show('weekly',this)">📜</button>
+  <button class="navbtn active" title="QG" onclick="show('home',this)"><span>🏰</span><small>QG</small></button>
+  <button class="navbtn" title="Mission" onclick="show('mission',this)"><span>⚔</span><small>Mission</small></button>
+  <button class="navbtn" title="Archives" onclick="show('archives',this)"><span>📜</span><small>Archives</small></button>
+  <button class="navbtn" title="Habiletés" onclick="show('abilities',this)"><span>🧠</span><small>Habiletés</small></button>
+  <button class="navbtn" title="Boss" onclick="show('boss',this)"><span>👑</span><small>Boss</small></button>
+  <button class="navbtn" title="Hall des Succès" onclick="show('achievements',this)"><span>🏆</span><small>Succès</small></button>
+  <button class="navbtn" title="Marchand" onclick="show('shop',this)"><span>⚜</span><small>Marchand</small></button>
+  <button class="navbtn" title="Rapport Hebdomadaire" onclick="show('weekly',this)"><span>📊</span><small>Rapport</small></button>
 </aside>
 
 <main class="main">
@@ -69,7 +70,15 @@
     <div class="card span-6"><h2>⭕ Habit Wheel</h2><div id="circle" class="trackerWheel"></div></div>
     <div class="card span-6"><h2>🌸 Mandala Discipline</h2><div id="mandala" class="mandala"></div></div>
     <div class="card span-12"><h2>📈 Courbe de Discipline</h2><div id="disciplineGraph"></div></div>
-    <div class="card span-12"><h2>📜 Chroniques</h2><div id="history"></div></div>
+    <div class="card span-12"><h2>📜 Archives</h2><div id="history"></div></div>
+  </div>
+</section>
+
+
+<section id="abilities" class="screen">
+  <div class="grid">
+    <div class="card span-6"><h2>🧠 Habiletés</h2><div id="skills2"></div></div>
+    <div class="card span-6"><h2>🔥 Séries</h2><div id="streaks2"></div></div>
   </div>
 </section>
 
@@ -87,7 +96,7 @@
 </section>
 
 <section id="achievements" class="screen">
-  <div class="card"><h2>🏆 Succès</h2><div id="achievementList"></div></div>
+  <div class="card"><h2>🏆 Hall des Succès</h2><div id="achievementList"></div></div>
 </section>
 
 <section id="shop" class="screen">
@@ -99,7 +108,7 @@
 
 <section id="weekly" class="screen">
   <div class="grid">
-    <div class="card span-6"><h2>📜 Débrief Hebdomadaire</h2><div id="weeklyStats"></div></div>
+    <div class="card span-6"><h2>📊 Rapport Hebdomadaire</h2><div id="weeklyStats"></div></div>
     <div class="card span-6"><h2>🔥 Séries actuelles</h2><div id="weeklyStreaks"></div></div>
     <div class="card span-12"><h2>📝 Rapport manuel</h2>
       <label>Ce qui m'a fait progresser</label><textarea id="weeklyWin"></textarea>
@@ -114,8 +123,8 @@
 <div class="mobileNav">
   <button class="active" onclick="show('home',this)">🏰</button>
   <button onclick="show('mission',this)">⚔</button>
-  <button onclick="show('archives',this)">📈</button>
-  <button onclick="show('boss',this)">👑</button>
+  <button onclick="show('archives',this)">📜</button>
+  <button onclick="show('abilities',this)">🧠</button>
   <button onclick="show('shop',this)">⚜</button>
 </div>
 
@@ -126,6 +135,7 @@
     <h2>♛ Accès du Roi</h2>
     <p class="muted">Zone protégée. Code requis.</p>
     <input id="kingCode" type="password" placeholder="Code administrateur" />
+    <div id="kingError" class="kingError">CODE INCORRECT</div>
     <div class="kingActions">
       <button class="primary" onclick="validateKingAccess()">Entrer</button>
       <button class="secondary" onclick="closeKingAccess()">Fermer</button>

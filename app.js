@@ -83,6 +83,8 @@ function render(){
 function renderStats(){
   skills.innerHTML=Object.entries(skillsMap).map(([k,label])=>`<div class="stat"><span>${label}</span><strong>Lv. ${Math.floor(state.skills[k]/100)+1}</strong></div><div class="bar"><div class="fill" style="width:${state.skills[k]%100}%"></div></div>`).join("");
   streaks.innerHTML=Object.entries(state.streaks).map(([k,v])=>`<div class="stat"><span>🔥 ${cap(k)}</span><strong>${v} j</strong></div>`).join("");
+  if(document.getElementById("skills2")) skills2.innerHTML=skills.innerHTML;
+  if(document.getElementById("streaks2")) streaks2.innerHTML=streaks.innerHTML;
   renderTrackers();
   history.innerHTML=state.history.length?state.history.slice().reverse().map(h=>`<div class="item"><span>${h.date}<br><span class="muted">${h.mainQuest||""}</span></span><strong>${h.pct}% • +${h.xp} XP • +${h.glory} ⚜</strong></div>`).join(""):"<div class='muted'>Aucune chronique.</div>";
 }
@@ -124,10 +126,16 @@ function closeKingAccess(){
   kingModal.classList.remove("show");
 }
 function validateKingAccess(){
+  const box=document.querySelector(".kingBox");
+  kingError.classList.remove("show");
+  box.classList.remove("wrong");
   if(kingCode.value==="2323"){
     kingPanel.classList.add("show");
     flash("ACCÈS DU ROI OUVERT");
   }else{
+    void box.offsetWidth;
+    box.classList.add("wrong");
+    kingError.classList.add("show");
     flash("CODE REFUSÉ");
   }
 }
