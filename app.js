@@ -1,5 +1,5 @@
 
-const KEY="ras_v5_3_3";
+const KEY="ras_v5_3_4";
 const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"🧠 Intelligence",domination:"👑 Domination",sante:"❤️ Santé"};
 const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
 const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
@@ -359,7 +359,8 @@ function updateSoundButton(){
   soundToggleBtn.textContent=state.sound?"🔊 Son ON":"🔇 Son OFF";
 }
 
-let musicOscillators=[];
+let musicTimer=null;
+let musicGain=null;
 function toggleMusic(){
   state.music=!state.music;
   save();
@@ -371,35 +372,43 @@ function updateMusicButton(){
   if(!document.getElementById("musicToggleBtn")) return;
   musicToggleBtn.textContent=state.music?"🎵 Music ON":"🎵 Music OFF";
 }
+function playMusicTone(freq,start,duration,type="square",gain=.035){
+  if(!state.music) return;
+  const ctx=getAudio();
+  const osc=ctx.createOscillator();
+  const g=ctx.createGain();
+  osc.type=type;
+  osc.frequency.setValueAtTime(freq,ctx.currentTime+start);
+  g.gain.setValueAtTime(0,ctx.currentTime+start);
+  g.gain.linearRampToValueAtTime(gain,ctx.currentTime+start+.012);
+  g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+start+duration);
+  osc.connect(g);
+  g.connect(ctx.destination);
+  osc.start(ctx.currentTime+start);
+  osc.stop(ctx.currentTime+start+duration+.04);
+}
 function startMusic(){
   if(!state.music) return;
-  stopMusic();
-  try{
-    const ctx=getAudio();
-    const master=ctx.createGain();
-    master.gain.setValueAtTime(.018,ctx.currentTime);
-    master.connect(ctx.destination);
-    const notes=[196,261.63,329.63];
-    notes.forEach((freq,i)=>{
-      const osc=ctx.createOscillator();
-      osc.type=i===0?"sine":"triangle";
-      osc.frequency.setValueAtTime(freq,ctx.currentTime);
-      const gain=ctx.createGain();
-      gain.gain.setValueAtTime(i===0?.45:.22,ctx.currentTime);
-      osc.connect(gain);
-      gain.connect(master);
-      osc.start();
-      musicOscillators.push({osc,gain,master});
-    });
-  }catch(e){}
+  stopMusic(false);
+  const melody=[523,659,784,659,587,698,880,784,659,523,587,659,392,523,659,587];
+  const bass=[130,130,146,146,174,174,196,196];
+  let step=0;
+  function loop(){
+    if(!state.music) return;
+    const m=melody[step%melody.length];
+    const b=bass[Math.floor(step/2)%bass.length];
+    playMusicTone(m,0,.18,"square",.026);
+    if(step%2===0) playMusicTone(b,0,.32,"triangle",.018);
+    if(step%4===3) playMusicTone(m*2,.02,.08,"triangle",.012);
+    step++;
+    musicTimer=setTimeout(loop,360);
+  }
+  loop();
 }
-function stopMusic(){
-  musicOscillators.forEach(o=>{
-    try{o.gain.gain.exponentialRampToValueAtTime(.001,getAudio().currentTime+.15);o.osc.stop(getAudio().currentTime+.2)}catch(e){}
-  });
-  musicOscillators=[];
+function stopMusic(update=true){
+  if(musicTimer) clearTimeout(musicTimer);
+  musicTimer=null;
 }
-
 function tone(freq,start,duration,type="square",gain=.08){
   if(!state.sound) return;
   const ctx=getAudio();

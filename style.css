@@ -990,3 +990,38 @@ body.qg-active .globalCompanion{
     padding:9px 12px;
   }
 }
+
+
+/* V5.3.4 — Companion spacing + mobile avatar fix */
+.globalCompanion{
+  gap:4px !important;
+}
+.globalAvatarMini{
+  margin-left:-8px !important;
+}
+@media(max-width:850px){
+  .globalCompanion{
+    gap:2px !important;
+    right:6px !important;
+  }
+  .globalAvatarMini{
+    width:64px !important;
+    height:128px !important;
+    margin-left:-6px !important;
+    display:flex !important;
+    align-items:flex-start !important;
+    justify-content:center !important;
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+    overflow:visible !important;
+  }
+  .globalAvatarMini .pixelHero{
+    transform:scale(.34) !important;
+    transform-origin:top center !important;
+    margin:0 !important;
+  }
+  .globalDialogue{
+    max-width:220px !important;
+  }
+}
