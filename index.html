@@ -1,271 +1,312 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RAS — The Game of Life V4</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
 
-<div id="onboarding" class="onboarding">
-  <div id="intro1" class="onboardScreen active">
-    <img class="onboardLogo" src="assets/logo-premium.png" alt="RAS Logo" />
-    <h1>Bienvenue dans</h1>
-    <h1>RAS — THE GAME OF LIFE</h1>
-    <button class="primary" onclick="nextIntro(2)">Continuer</button>
-  </div>
+const KEY="ras_v5_0_5";
+const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"🧠 Intelligence",domination:"👑 Domination",sante:"❤️ Santé"};
+const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
+const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
+const defaultObjectives=[
+{id:"morning",period:"🌅 MATIN",title:"Protocole matin",desc:"Réveil 6h · visage dans la glace · soin visage · coiffure/barbe · préparation mentale",xp:45,glory:9,skill:"discipline"},
+{id:"meal1",period:"🍽️ REPAS",title:"Repas 1 + dents",desc:"Petit-déjeuner validé · brossage dents après repas",xp:25,glory:5,skill:"sante",streak:"nutrition"},
+{id:"study",period:"🧠 SAVOIR",title:"Bloc savoir",desc:"APEX · lecture · développement personnel",xp:60,glory:12,skill:"intelligence",streak:"apex"},
+{id:"training",period:"⚔️ TRAINING",title:"Épreuve physique",desc:"Training du jour · séance notée · douche salle · repas post-training",xp:120,glory:24,skill:"force",streak:"training"},
+{id:"meal2",period:"🍽️ REPAS",title:"Repas 2 + dents",desc:"Déjeuner / post-training validé · brossage dents après repas",xp:25,glory:5,skill:"sante",streak:"nutrition"},
+{id:"work",period:"👑 DOMINATION",title:"Bloc business",desc:"RAS · PHF · programmation · coaching · messages clients",xp:80,glory:16,skill:"domination"},
+{id:"meal3",period:"🍽️ REPAS",title:"Repas 3 + dents",desc:"Collation validée · brossage dents après repas",xp:20,glory:4,skill:"sante",streak:"nutrition"},
+{id:"meal4",period:"🍽️ REPAS",title:"Repas 4 + dents",desc:"Collation validée · brossage dents après repas",xp:20,glory:4,skill:"sante",streak:"nutrition"},
+{id:"meal5",period:"🍽️ REPAS",title:"Repas 5 + dents",desc:"Dîner validé · brossage dents après repas",xp:25,glory:5,skill:"sante",streak:"nutrition"},
+{id:"evening",period:"🌙 SOIR",title:"Protocole soir",desc:"Douche si nécessaire · rangement rapide · prière · CBD chill canapé · coucher 22h30",xp:60,glory:12,skill:"discipline",streak:"sommeil"},
+{id:"journal",period:"📜 DÉBRIEF",title:"Rapport de mission",desc:"Journée clôturée · notes rapides · préparation de demain",xp:30,glory:6,skill:"discipline",streak:"journal"}
+];
+const achievements=[["Premier jour joué",s=>s.history.length>=1],["7 journées sauvegardées",s=>s.history.length>=7],["Level 10 atteint",s=>lvl(s.totalXp).level>=10],["250 Glory gagnées",s=>s.history.reduce((a,b)=>a+b.glory,0)>=250],["Série Training 7 jours",s=>s.streaks.training>=7],["Série Sommeil 7 jours",s=>s.streaks.sommeil>=7],["Journée parfaite 100%",s=>s.history.some(h=>h.pct===100)],["5 journées à 80%+",s=>s.history.filter(h=>h.pct>=80).length>=5],["Domination Lv.10",s=>Math.floor(s.skills.domination/100)+1>=10]];
+const defaultState={version:"5.0.1",totalXp:0,glory:0,skills:{force:0,discipline:0,intelligence:0,domination:0,sante:0},streaks:{training:0,lecture:0,sommeil:0,priere:0,apex:0,nutrition:0,journal:0},done:{},history:[],gloryLog:[],bossIndex:0,bossProgress:0,sound:false,player:null,onboarded:false};
+let state=load(), displayXp=0, displayGlory=0, displayLevel=1;
+function need(l){return Math.round(100*Math.pow(l,1.35))}
+function lvl(xp){let level=1,x=xp;while(x>=need(level)){x-=need(level);level++}return{level,current:x,needed:need(level)}}
+function load(){try{return {...structuredClone(defaultState),...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch{return structuredClone(defaultState)}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function show(id,btn){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".navbtn,.mobileNav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");render();updateSoundButton()}
 
-  <div id="intro2" class="onboardScreen">
-    <h1>L'expérience ne se gagne pas en terrassant des monstres.</h1>
-    <p>Elle se gagne en devenant une meilleure version de toi-même.</p>
-    <button class="primary" onclick="nextIntro(3)">Continuer</button>
-  </div>
+function toggleMoreMenu(force){
+  if(!document.getElementById("moreMenu")) return;
+  const show = typeof force==="boolean" ? force : !moreMenu.classList.contains("show");
+  moreMenu.classList.toggle("show",show);
+}
 
-  <div id="intro3" class="onboardScreen">
-    <h1>Avant de commencer ton aventure...</h1>
-    <p>Créons ton personnage.</p>
-    <button class="primary" onclick="nextIntro(4)">Créer mon personnage</button>
-  </div>
+function showById(id){show(id,null)}
+function init(){renderBossSelect();prefillToday();displayXp=state.totalXp;displayGlory=state.glory;displayLevel=lvl(state.totalXp).level;render()}
+function prefillToday(){missionTitle.textContent=dailyMissions[new Date().getDay()][0]}
+function renderMissionCards(){
+  const active=defaultObjectives.filter(o=>!state.done[o.id]);
+  const done=defaultObjectives.filter(o=>state.done[o.id]);
+  missionCards.innerHTML=renderPeriodGroups(active);
+  completedMissions.innerHTML=done.length?renderPeriodGroups(done):"<div class='muted'>Aucune mission accomplie pour le moment.</div>";
+}
+function renderPeriodGroups(list){
+  const periods=[...new Set(list.map(o=>o.period))];
+  return periods.map(period=>{
+    const cards=list.filter(o=>o.period===period).map(cardHTML).join("");
+    return `<div class="card span-12 periodGroup"><h2>${period}</h2><div class="grid">${cards}</div></div>`;
+  }).join("");
+}
+function cardHTML(o){
+  return `<div class="missionCard span-6 ${state.done[o.id]?'done':''}"><div class="rank">${skillsMap[o.skill]}</div><h2>${o.title}</h2><p class="muted">${o.desc}</p><div class="reward">+${o.xp} XP · +${o.glory} ⚜</div><button class="${state.done[o.id]?'secondary':'primary'}" onclick="toggleObjective('${o.id}')">${state.done[o.id]?'Annuler':'ACCOMPLIR'}</button></div>`;
+}
+function toggleObjective(id){
+  const was=!!state.done[id];
+  state.done[id]=!was;
+  const o=defaultObjectives.find(x=>x.id===id);
+  if(state.done[id]){
+    playSound("cling");
+    flash(`+${o.xp} XP  +${o.glory} ⚜`);
+    floatReward.textContent=`+${o.xp} XP   +${o.glory} ⚜`;
+    floatReward.classList.remove('show');
+    void floatReward.offsetWidth;
+    floatReward.classList.add('show');
+    if(navigator.vibrate) navigator.vibrate(45);
+  }
+  save();render();
+}
+function calc(){
+  let xp=0,glory=0,done=0,ids=[],sg={force:0,discipline:0,intelligence:0,domination:0,sante:0};
+  defaultObjectives.forEach(o=>{if(state.done[o.id]){done++;ids.push(o.id);xp+=o.xp;glory+=o.glory;sg[o.skill]+=o.xp}});
+  return{xp,glory,done,total:defaultObjectives.length,ids,sg}
+}
+function animateNumber(from,to,duration,onUpdate,onDone){
+  const start=performance.now();
+  function tick(now){
+    const p=Math.min(1,(now-start)/duration);
+    const eased=1-Math.pow(1-p,3);
+    onUpdate(Math.round(from+(to-from)*eased));
+    if(p<1)requestAnimationFrame(tick); else if(onDone)onDone();
+  }
+  requestAnimationFrame(tick);
+}
+function render(){
+  let c=calc(), targetXp=state.totalXp+c.xp, targetGlory=state.glory+c.glory, l=lvl(targetXp);
+  animateNumber(displayXp,targetXp,450,v=>{displayXp=v;const dl=lvl(v);level.textContent=dl.level;xpText.textContent=`${dl.current} / ${dl.needed}`;xpFill.style.width=`${Math.round(dl.current/dl.needed*100)}%`;},()=>{if(l.level>displayLevel)showLevelUp(l.level);displayLevel=l.level});
+  animateNumber(displayGlory,targetGlory,450,v=>{displayGlory=v;gloryText.textContent=v+" ⚜"});
+  let pct=c.total?Math.round(c.done/c.total*100):0;dayPct.textContent=pct+"%";dayFill.style.width=pct+"%";
+  mainStreak.textContent=Math.max(...Object.values(state.streaks))+" j";homeBoss.textContent=bosses[state.bossIndex][0];
+  if(document.getElementById("qgLevel")) qgLevel.textContent=l.level;
+  if(document.getElementById("qgXpFill")) qgXpFill.style.width=`${Math.round(l.current/l.needed*100)}%`;
+  if(document.getElementById("qgGlory")) qgGlory.textContent=(state.glory+c.glory)+" ⚜";
+  if(document.getElementById("qgBoss")) qgBoss.textContent=bosses[state.bossIndex][0];
+  if(document.getElementById("qgAvatarMount")) qgAvatarMount.innerHTML=avatarHTML();
 
-  <div id="intro4" class="onboardScreen">
-    <h1>Création du personnage</h1>
-    <div class="creatorGrid">
-      <div class="creatorPanel">
-        <label>Nom du personnage</label>
-        <input id="charName" type="text" value="Robin" />
-        <label>Sexe</label>
-        <select id="charGender"><option value="gender-male">Homme</option><option value="gender-female">Femme</option></select>
-        <label>Couleur de peau</label>
-        <select id="charSkin"><option value="skin-light">Claire</option><option value="skin-medium">Mate</option><option value="skin-dark">Foncée</option></select>
-        <label>Cheveux</label>
-        <select id="charHair"><option value="hair-dark">Bruns</option><option value="hair-blond">Blonds</option><option value="hair-bald">Rasé / chauve</option></select>
-        <label>Barbe</label>
-        <select id="charBeard"><option value="beard-full">Barbe complète</option><option value="beard-short">Barbe courte</option><option value="beard-none">Sans barbe</option></select>
-        <label>Couleur de barbe</label>
-        <select id="charBeardColor">
-          <option value="beard-dark">Brune</option>
-          <option value="beard-blond">Blonde</option>
-          <option value="beard-red">Rousse</option>
-          <option value="beard-grey">Grise</option>
-        </select>
-        <label>Yeux</label>
-        <select id="charEyes"><option value="eyes-brown">Marron</option><option value="eyes-blue">Bleus</option><option value="eyes-green">Verts</option></select>
-        <label>Tatouages</label>
-        <select id="charTattoos"><option value="tattoos-yes">Tatouages bras</option><option value="tattoos-no">Aucun</option></select>
-        <button class="primary createCharacterBtn" onclick="saveCharacter()">✅ VALIDER LE PERSONNAGE</button>
-      </div>
-      <div class="avatarPreview">
-        <div id="avatarPreview" class="avatar pixelHero skin-light hair-dark beard-full eyes-brown tattoos-yes">
-          <div class="px hair"></div>
-          <div class="px head"></div>
-          <div class="px ear left"></div>
-          <div class="px ear right"></div>
-          <div class="px eye left"></div>
-          <div class="px eye right"></div>
-          <div class="px beard"></div>
-          <div class="px neck"></div>
-          <div class="px torso"></div>
-          <div class="px arm left"></div>
-          <div class="px arm right"></div>
-          <div class="px tattoo left"></div>
-          <div class="px tattoo right"></div>
-          <div class="px legs"></div>
-          <div class="px legGap"></div>
-          <div class="px boot left"></div>
-          <div class="px boot right"></div>
-        </div>
-        <div id="avatarNamePreview" class="avatarName">Robin</div>
-        <div class="rank">Aventurier — Niveau 1</div>
-      </div>
-    </div>
-  </div>
-</div>
+  renderMissionCards();renderStats();renderBoss();renderShop();renderAchievements();renderWeekly();
+}
+function renderStats(){
+  skills.innerHTML=Object.entries(skillsMap).map(([k,label])=>`<div class="stat"><span>${label}</span><strong>Lv. ${Math.floor(state.skills[k]/100)+1}</strong></div><div class="bar"><div class="fill" style="width:${state.skills[k]%100}%"></div></div>`).join("");
+  streaks.innerHTML=Object.entries(state.streaks).map(([k,v])=>`<div class="stat"><span>🔥 ${cap(k)}</span><strong>${v} j</strong></div>`).join("");
+  if(document.getElementById("skills2")) skills2.innerHTML=skills.innerHTML;
+  if(document.getElementById("streaks2")) streaks2.innerHTML=streaks.innerHTML;
+  renderTrackers();
+  history.innerHTML=state.history.length?state.history.slice().reverse().map(h=>`<div class="item"><span>${h.date}<br><span class="muted">${h.mainQuest||""}</span></span><strong>${h.pct}% • +${h.xp} XP • +${h.glory} ⚜</strong></div>`).join(""):"<div class='muted'>Aucune chronique.</div>";
+}
+function renderBossSelect(){bossSelect.innerHTML=bosses.map((b,i)=>`<option value="${i}">${b[0]}</option>`).join("");bossSelect.value=state.bossIndex;bossProgress.value=state.bossProgress;bossSelect.oninput=()=>{state.bossIndex=+bossSelect.value;save();render()};bossProgress.oninput=()=>{state.bossProgress=+bossProgress.value;save();render()}}
+function renderBoss(){bossFill.style.width=(state.bossProgress||0)+"%";bossList.innerHTML=bosses.map((b,i)=>`<div class="item ${i==state.bossIndex?"":"locked"}"><span><strong>${b[0]}</strong><br><span class="muted">${b[1]} • ${skillsMap[b[2]]}</span></span><button class="secondary" onclick="state.bossIndex=${i};save();render()">Activer</button></div>`).join("")}
+function renderShop(){let items=[["🍺 Petite bière",100],["🎮 1h Geek",200],["🍔 Restaurant",500],["🏍 Balade moto",700]];shopList.innerHTML=items.map(([n,c])=>`<div class="item"><span>${n}</span><button class="primary" onclick="buy('${n}',${c})">${c} ⚜</button></div>`).join("");gloryLog.innerHTML=state.gloryLog.length?state.gloryLog.slice().reverse().map(x=>`<div class="stat"><span>${x.date} — ${x.name}</span><strong>-${x.cost} ⚜</strong></div>`).join(""):"<div class='muted'>Aucune transaction.</div>"}
+function renderAchievements(){achievementList.innerHTML=achievements.map(([n,test])=>`<div class="item ${test(state)?"":"locked"}"><span>${test(state)?"🏆":"🔒"} ${n}</span><strong>${test(state)?"Débloqué":"Verrouillé"}</strong></div>`).join("")}
+function renderTrackers(){let last=state.history.slice(-31),last7=state.history.slice(-7);circle.innerHTML="";mandala.innerHTML="";for(let i=0;i<31;i++){let d=last[i];circle.innerHTML+=`<div class="dayDot ${d&&d.pct>=80?'done':''}">${i+1}</div>`;mandala.innerHTML+=`<div class="petal ${d&&d.pct>=80?'done':''}"></div>`}disciplineGraph.innerHTML=last7.map(d=>`<div class="stat"><span>${d.date}</span><strong>${d.pct}%</strong></div><div class="graphBar"><div style="width:${d.pct}%"></div></div>`).join("")||"<div class='muted'>Aucune donnée.</div>"}
+function renderWeekly(){let last7=state.history.slice(-7),xp=last7.reduce((a,b)=>a+b.xp,0),g=last7.reduce((a,b)=>a+b.glory,0),avg=last7.length?Math.round(last7.reduce((a,b)=>a+b.pct,0)/last7.length):0;weeklyStats.innerHTML=`<div class="stat"><span>Missions</span><strong>${last7.length}/7</strong></div><div class="stat"><span>XP</span><strong>+${xp}</strong></div><div class="stat"><span>Glory</span><strong>+${g} ⚜</strong></div><div class="stat"><span>Moyenne</span><strong>${avg}%</strong></div>`;weeklyStreaks.innerHTML=Object.entries(state.streaks).map(([k,v])=>`<div class="stat"><span>🔥 ${cap(k)}</span><strong>${v} j</strong></div>`).join("")}
+function saveDay(){let c=calc(),pct=c.total?Math.round(c.done/c.total*100):0,before=lvl(state.totalXp).level;state.totalXp+=c.xp;state.glory+=c.glory;Object.keys(c.sg).forEach(k=>state.skills[k]+=c.sg[k]);defaultObjectives.forEach(o=>{if(o.streak){if(state.done[o.id])state.streaks[o.streak]=(state.streaks[o.streak]||0)+1;else if(["training","sommeil","apex"].includes(o.streak))state.streaks[o.streak]=0}});state.history.push({date:new Date().toISOString().slice(0,10),xp:c.xp,glory:c.glory,pct,done:c.done,total:c.total,doneIds:c.ids,mainQuest:missionTitle.textContent||""});state.done={};save();displayXp=state.totalXp-c.xp;displayGlory=state.glory-c.glory;render();showMissionComplete(c.xp,c.glory);if(lvl(state.totalXp).level>before)setTimeout(()=>showLevelUp(lvl(state.totalXp).level),1800)}
+function resetDay(){state.done={};save();render()}
+function buy(n,c){if(state.glory<c){alert("Pas assez de Glory.");return}state.glory-=c;state.gloryLog.push({date:new Date().toISOString().slice(0,10),name:n,cost:c});save();playSound("buy");flash("ACHAT CONFIRMÉ");render()}
+function flash(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1200)}
 
-<div id="splash">
-  <img class="splash-logo" src="assets/logo-premium.png" alt="RAS Logo" />
-  <div class="splash-sub">THE GAME OF LIFE</div>
-</div>
+function showMissionComplete(xp,glory){
+  missionCompleteReward.textContent=`+${xp} XP · +${glory} ⚜`;
+  particleLayer.innerHTML="";
+  for(let i=0;i<28;i++){
+    const p=document.createElement("div");
+    p.className="particle";
+    p.style.left=Math.random()*100+"%";
+    p.style.bottom=(Math.random()*40)+"px";
+    p.style.animationDelay=(Math.random()*1.1)+"s";
+    p.style.animationDuration=(1.4+Math.random()*1.3)+"s";
+    particleLayer.appendChild(p);
+  }
+  playSound("complete");
+  missionCompleteOverlay.classList.add("show");
+  setTimeout(()=>missionCompleteOverlay.classList.remove("show"),2600);
+}
 
-<div class="app">
-<aside class="sidebar">
-  <img class="side-logo" src="assets/logo-premium.png" alt="RAS" />
-  <button class="navbtn active" title="Ordres du Jour" onclick="show('home',this)"><span>📜</span><small>Ordres</small></button>
-  <button class="navbtn" title="QG" onclick="show('qg',this)"><span>🏰</span><small>QG</small></button>
-  <button class="navbtn" title="Mission" onclick="show('mission',this)"><span>⚔</span><small>Mission</small></button>
-  <button class="navbtn" title="Habiletés" onclick="show('abilities',this)"><span>🧠</span><small>Habiletés</small></button>
-  <button class="navbtn" title="Boss" onclick="show('boss',this)"><span>👑</span><small>Boss</small></button>
-  <button class="navbtn" title="Plus" onclick="toggleMoreMenu()"><span>⋮</span><small>Plus</small></button>
-</aside>
-
-<main class="main">
-<section id="home" class="screen active">
-  <div class="hero">
-    <div class="heroCard">
-      <div class="rank">📜 ORDRES DU JOUR</div>
-      <img class="main-logo" src="assets/logo-premium.png" alt="RAS Logo" />
-      <div class="subtitle">Become the highest level version of yourself.</div>
-      <div class="level">LVL <span id="level">1</span></div>
-      <div class="bar"><div class="fill" id="xpFill"></div></div>
-      <div class="stat"><span>XP</span><strong id="xpText">0 / 100</strong></div>
-      <div class="stat"><span>⚜ Glory</span><strong id="gloryText">0 ⚜</strong></div>
-      <div class="stat"><span>🔥 Série dominante</span><strong id="mainStreak">0 j</strong></div>
-      <div class="stat"><span>👑 Boss actif</span><strong id="homeBoss">—</strong></div>
-      <div class="bar"><div class="fill" id="dayFill"></div></div>
-      <div class="stat"><span>Progression Mission</span><strong id="dayPct">0%</strong></div>
-      <button class="primary" onclick="showById('qg')">▶ COMMENCER L’AVENTURE</button>
-      <button class="secondary" onclick="saveDay()">TERMINER LA MISSION</button>
-    </div>
-  </div>
-</section>
-
-
-<section id="qg" class="screen">
-  <div class="hero">
-    <div class="heroCard qgCard">
-      <div class="rank">🏰 QG</div>
-      <div id="qgAvatarMount"></div>
-      <div class="level">LVL <span id="qgLevel">1</span></div>
-      <div class="bar"><div class="fill" id="qgXpFill"></div></div>
-      <div class="stat"><span>⚜ Glory</span><strong id="qgGlory">0 ⚜</strong></div>
-      <div class="stat"><span>👑 Boss actif</span><strong id="qgBoss">—</strong></div>
-      <button class="primary" onclick="showById('mission')">⚔ PARTIR EN MISSION</button>
-    </div>
-  </div>
-</section>
-
-<section id="mission" class="screen">
-  <div class="grid">
-    <div class="card span-12">
-      <h2>⚔ Mission du jour</h2>
-      <div class="stat"><span>Ordre principal</span><strong id="missionTitle">—</strong></div>
-      <button class="primary" onclick="prefillToday()">Charger mission du jour</button>
-      <button class="secondary" onclick="resetDay()">Réinitialiser mission</button>
-      <button class="primary" onclick="saveDay()">Terminer mission</button>
-    </div>
-    <div id="missionCards" class="span-12 grid"></div>
-    <div class="card span-12">
-      <h2>✅ Missions accomplies</h2>
-      <div id="completedMissions" class="grid"></div>
-    </div>
-  </div>
-</section>
-
-<section id="archives" class="screen">
-  <div class="grid">
-    <div class="card span-6"><h2>⚔ Habiletés</h2><div id="skills"></div></div>
-    <div class="card span-6"><h2>🔥 Séries</h2><div id="streaks"></div></div>
-    <div class="card span-6"><h2>⭕ Habit Wheel</h2><div id="circle" class="trackerWheel"></div></div>
-    <div class="card span-6"><h2>🌸 Mandala Discipline</h2><div id="mandala" class="mandala"></div></div>
-    <div class="card span-12"><h2>📈 Courbe de Discipline</h2><div id="disciplineGraph"></div></div>
-    <div class="card span-12"><h2>📜 Archives</h2><div id="history"></div></div>
-  </div>
-</section>
+function showLevelUp(n){levelUpNumber.textContent=n;playSound("level");
+  levelOverlay.classList.add("show");setTimeout(()=>levelOverlay.classList.remove("show"),1500)}
 
 
-<section id="abilities" class="screen">
-  <div class="grid">
-    <div class="card span-6"><h2>🧠 Habiletés</h2><div id="skills2"></div></div>
-    <div class="card span-6"><h2>🔥 Séries</h2><div id="streaks2"></div></div>
-  </div>
-</section>
+let audioCtx=null;
+function getAudio(){
+  if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+function toggleSound(){
+  state.sound=!state.sound;
+  save();
+  updateSoundButton();
+  if(state.sound) playSound("king");
+}
+function updateSoundButton(){
+  if(!document.getElementById("soundToggleBtn")) return;
+  soundToggleBtn.textContent=state.sound?"🔊 Son ON":"🔇 Son OFF";
+}
+function tone(freq,start,duration,type="square",gain=.08){
+  if(!state.sound) return;
+  const ctx=getAudio();
+  const osc=ctx.createOscillator();
+  const g=ctx.createGain();
+  osc.type=type;
+  osc.frequency.setValueAtTime(freq,ctx.currentTime+start);
+  g.gain.setValueAtTime(0,ctx.currentTime+start);
+  g.gain.linearRampToValueAtTime(gain,ctx.currentTime+start+.015);
+  g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+start+duration);
+  osc.connect(g);
+  g.connect(ctx.destination);
+  osc.start(ctx.currentTime+start);
+  osc.stop(ctx.currentTime+start+duration+.03);
+}
+function playSound(name){
+  if(!state.sound) return;
+  try{
+    getAudio();
+    if(name==="cling"){
+      tone(659,0,.09,"square",.07);
+      tone(988,.08,.11,"square",.06);
+      tone(1318,.16,.16,"triangle",.05);
+    }
+    if(name==="complete"){
+      tone(523,0,.12,"square",.07);
+      tone(659,.11,.12,"square",.07);
+      tone(784,.22,.16,"square",.07);
+      tone(1046,.38,.28,"triangle",.06);
+    }
+    if(name==="level"){
+      tone(523,0,.09,"square",.07);
+      tone(659,.09,.09,"square",.07);
+      tone(784,.18,.09,"square",.07);
+      tone(1046,.27,.14,"square",.07);
+      tone(1318,.43,.28,"triangle",.06);
+    }
+    if(name==="wrong"){
+      tone(160,0,.13,"sawtooth",.06);
+      tone(120,.12,.18,"sawtooth",.05);
+    }
+    if(name==="king"){
+      tone(392,0,.08,"triangle",.05);
+      tone(523,.08,.10,"triangle",.05);
+      tone(784,.18,.16,"triangle",.05);
+    }
+    if(name==="buy"){
+      tone(988,0,.07,"square",.055);
+      tone(784,.08,.07,"square",.05);
+      tone(1174,.17,.11,"triangle",.05);
+    }
+  }catch(e){}
+}
 
-<section id="boss" class="screen">
-  <div class="grid">
-    <div class="card span-12 boss-active">
-      <h2>👑 Boss actif</h2>
-      <select id="bossSelect"></select>
-      <div class="bar bossBar"><div class="fill" id="bossFill"></div></div>
-      <label>Progression Boss (%)</label>
-      <input id="bossProgress" type="number" min="0" max="100" value="0" />
-    </div>
-    <div class="card span-12"><h2>👹 Tableau des Boss</h2><div id="bossList"></div></div>
-  </div>
-</section>
 
-<section id="achievements" class="screen">
-  <div class="card"><h2>🏆 Hall des Succès</h2><div id="achievementList"></div></div>
-</section>
+function checkOnboarding(){
+  if(!state.player || !state.onboarded || state.version!=="5.0.1"){
+    state.onboarded=false;
+    onboarding.classList.add("show");
+    if(document.getElementById("splash")) splash.style.display="none";
+  }
+}
+function nextIntro(n){
+  document.querySelectorAll(".onboardScreen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("intro"+n).classList.add("active");
+  if(n===4) bindCreatorPreview();
+}
+function bindCreatorPreview(){
+  ["charName","charGender","charSkin","charHair","charBeard","charBeardColor","charEyes","charTattoos"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && !el.dataset.bound){
+      el.dataset.bound="1";
+      el.addEventListener("input",updateAvatarPreview);
+    }
+  });
+  updateAvatarPreview();
+}
+function updateAvatarPreview(){
+  if(!document.getElementById("avatarPreview")) return;
+  avatarPreview.className=`avatar pixelHero ${charGender.value} ${charSkin.value} ${charHair.value} ${charBeard.value} ${charBeardColor.value} ${charEyes.value} ${charTattoos.value}`;
+  avatarNamePreview.textContent=charName.value || "Aventurier";
+}
+function saveCharacter(){
+  state.player={name:charName.value||"Robin",gender:charGender.value,skin:charSkin.value,hair:charHair.value,beard:charBeard.value,beardColor:charBeardColor.value,eyes:charEyes.value,tattoos:charTattoos.value};
+  state.onboarded=true;
+  state.version="5.0.1";
+  save();
+  onboarding.classList.remove("show");
+  if(document.getElementById("splash")) splash.style.display="";
+  render();
+  flash("PERSONNAGE CRÉÉ");
+  if(typeof playSound==="function") playSound("king");
+}
+function modifyCharacter(){
+  closeKingAccess();
+  const p=state.player||{};
+  onboarding.classList.add("show");
+  nextIntro(4);
+  setTimeout(()=>{
+    charName.value=p.name||"Robin";
+    charGender.value=p.gender||"gender-male";
+    charSkin.value=p.skin||"skin-light";
+    charHair.value=p.hair||"hair-dark";
+    charBeard.value=p.beard||"beard-full";
+    charBeardColor.value=p.beardColor||"beard-dark";
+    charEyes.value=p.eyes||"eyes-brown";
+    charTattoos.value=p.tattoos||"tattoos-yes";
+    updateAvatarPreview();
+  },50);
+}
+function avatarHTML(){
+  const p=state.player||{name:"Robin",gender:"gender-male",skin:"skin-light",hair:"hair-dark",beard:"beard-full",beardColor:"beard-dark",eyes:"eyes-brown",tattoos:"tattoos-yes"};
+  return `<div class="avatar pixelHero ${p.gender||'gender-male'} ${p.skin} ${p.hair} ${p.beard} ${p.beardColor||'beard-dark'} ${p.eyes} ${p.tattoos}">
+    <div class="px hair"></div><div class="px head"></div><div class="px ear left"></div><div class="px ear right"></div>
+    <div class="px eye left"></div><div class="px eye right"></div><div class="px beard"></div><div class="px neck"></div>
+    <div class="px torso"></div><div class="px arm left"></div><div class="px arm right"></div>
+    <div class="px tattoo left"></div><div class="px tattoo right"></div><div class="px legs"></div><div class="px legGap"></div>
+    <div class="px boot left"></div><div class="px boot right"></div>
+  </div><div class="avatarName">${p.name||"Robin"}</div>`;
+}
 
-<section id="shop" class="screen">
-  <div class="grid">
-    <div class="card span-6"><h2>⚜ Le Marchand</h2><div id="shopList"></div></div>
-    <div class="card span-6"><h2>Transactions</h2><div id="gloryLog"></div></div>
-  </div>
-</section>
+function openKingAccess(){
+  kingModal.classList.add("show");
+  kingCode.value="";
+  kingPanel.classList.remove("show");
+}
+function closeKingAccess(){
+  kingModal.classList.remove("show");
+}
+function validateKingAccess(){
+  const box=document.querySelector(".kingBox");
+  kingError.classList.remove("show");
+  box.classList.remove("wrong");
+  if(kingCode.value==="2323"){
+    kingPanel.classList.add("show");
+    playSound("king");
+    flash("ACCÈS DU ROI OUVERT");
+  }else{
+    void box.offsetWidth;
+    box.classList.add("wrong");
+    kingError.classList.add("show");
+    playSound("wrong");
+    flash("CODE REFUSÉ");
+  }
+}
+function royalReset(){
+  if(!confirm("Réinitialiser complètement RAS — The Game of Life ?")) return;
+  if(!confirm("Dernière confirmation : cette action est irréversible.")) return;
+  localStorage.removeItem(KEY);
+  state=structuredClone(defaultState);
+  displayXp=0;
+  displayGlory=0;
+  displayLevel=1;
+  closeKingAccess();
+  render();
+  flash("APPLICATION RÉINITIALISÉE");
+}
 
-<section id="weekly" class="screen">
-  <div class="grid">
-    <div class="card span-6"><h2>📊 Rapport Hebdomadaire</h2><div id="weeklyStats"></div></div>
-    <div class="card span-6"><h2>🔥 Séries actuelles</h2><div id="weeklyStreaks"></div></div>
-    <div class="card span-12"><h2>📝 Rapport manuel</h2>
-      <label>Ce qui m'a fait progresser</label><textarea id="weeklyWin"></textarea>
-      <label>Ce qui m'a freiné</label><textarea id="weeklyFail"></textarea>
-      <label>Objectif semaine prochaine</label><textarea id="weeklyGoal"></textarea>
-    </div>
-  </div>
-</section>
-</main>
-</div>
-
-<div id="moreMenu" class="moreMenu">
-  <button onclick="showById('shop');toggleMoreMenu(false)">⚜ Marchand</button>
-  <button onclick="showById('achievements');toggleMoreMenu(false)">🏆 Hall des Succès</button>
-  <button onclick="showById('weekly');toggleMoreMenu(false)">📊 Rapport Hebdomadaire</button>
-  <button onclick="showById('archives');toggleMoreMenu(false)">📜 Archives</button>
-</div>
-
-<div class="mobileNav">
-  <button class="active" onclick="show('home',this)">📜</button>
-  <button onclick="show('qg',this)">🏰</button>
-  <button onclick="show('mission',this)">⚔</button>
-  <button onclick="show('abilities',this)">🧠</button>
-  <button onclick="toggleMoreMenu()">⋮</button>
-</div>
-
-<button id="soundToggleBtn" class="soundToggleBtn" onclick="toggleSound()">🔇 Son OFF</button>
-<button id="kingAccessBtn" class="kingAccessBtn" onclick="openKingAccess()">♛ Accès du Roi</button>
-
-<div id="kingModal" class="kingModal">
-  <div class="kingBox">
-    <h2>♛ Accès du Roi</h2>
-    <p class="muted">Zone protégée. Code requis.</p>
-    <input id="kingCode" type="password" placeholder="Code administrateur" />
-    <div id="kingError" class="kingError">CODE INCORRECT</div>
-    <div class="kingActions">
-      <button class="primary" onclick="validateKingAccess()">Entrer</button>
-      <button class="secondary" onclick="closeKingAccess()">Fermer</button>
-    </div>
-    <div id="kingPanel" class="kingPanel">
-      <h2>Commandes Royales</h2>
-      <button class="danger" onclick="royalReset()">Réinitialiser complètement l'application</button>
-      <button class="primary" onclick="modifyCharacter()">Modifier le personnage</button>
-      <p class="muted small">Action irréversible : XP, Glory, séries, archives, boss et missions seront effacés.</p>
-    </div>
-  </div>
-</div>
-
-<div id="toast" class="toast">+ XP</div>
-<div id="floatReward" class="floatReward">+100 XP</div>
-<div id="missionCompleteOverlay" class="missionCompleteOverlay">
-  <div class="missionCompleteBox">
-    <div class="waterFill"></div>
-    <div id="particleLayer"></div>
-    <div class="missionCompleteContent">
-      <div class="missionCompleteTitle">MISSION COMPLETE</div>
-      <div class="missionCompleteMain">MISSION ACCOMPLIE</div>
-      <div id="missionCompleteReward" class="missionCompleteReward">+0 XP · +0 ⚜</div>
-    </div>
-  </div>
-</div>
-
-<div id="levelOverlay" class="levelOverlay">
-  <div class="levelBox">
-    <div class="levelLabel">LEVEL UP</div>
-    <div class="levelNumber">LVL <span id="levelUpNumber">1</span></div>
-  </div>
-</div>
-
-<script src="app.js"></script>
-</body>
-</html>
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+init();
+checkOnboarding();

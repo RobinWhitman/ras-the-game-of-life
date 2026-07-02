@@ -606,7 +606,7 @@ input,textarea,select{width:100%;background:#101010;color:var(--text);border:1px
 .tattoos-no .tattoo:after{display:none}
 
 
-/* V5.0.4 — Gender, skin, beard color fixes */
+/* V5.0.5 — emergency stable fix: gender + full skin + beard color */
 .skin-light .head,.skin-light .ear,.skin-light .neck,.skin-light .arm{background:#d98d4f !important}
 .skin-medium .head,.skin-medium .ear,.skin-medium .neck,.skin-medium .arm{background:#b87546 !important}
 .skin-dark .head,.skin-dark .ear,.skin-dark .neck,.skin-dark .arm{background:#75462e !important}
