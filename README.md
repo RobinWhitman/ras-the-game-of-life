@@ -1,22 +1,19 @@
-# RAS — The Game of Life V5.4.0
+# RAS — The Game of Life V5.4.1
 
-V5.4 — QG vivant :
-- torches animées ;
-- particules dorées ;
-- lumière subtile ;
-- ambiance salle de commandement ;
-- héros mieux mis en scène ;
-- aucune modification du moteur principal.
+Ajout :
+- bibliothèque de dialogues fortement enrichie ;
+- environ 300+ phrases ;
+- nouvelles catégories : boss, level, chest ;
+- ton mentor stoïque / RPG / discipline.
 
-## Dialogues
-Bibliothèque actuelle : environ 80–90 phrases.
-Objectif futur : 300–400 phrases.
+Note :
+- l’avatar n’évolue pas encore automatiquement avec les niveaux.
+- Ce sera la V5.6 — Évolution du Héros.
 
 ## Mise à jour GitHub
 Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
 
 ## Test
-1. Va sur QG.
-2. Vérifie torches, particules, lumière.
-3. Vérifie que les boutons/missions/sons/musique fonctionnent toujours.
-4. Teste rapidement mobile.
+1. Le compagnon doit continuer à fonctionner.
+2. Les phrases doivent être beaucoup moins répétitives.
+3. Missions / QG / musique / sons doivent rester fonctionnels.
