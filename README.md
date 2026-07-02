@@ -1,36 +1,26 @@
-# RAS — The Game of Life V5.6.0
+# RAS — The Game of Life V5.6.3 EMERGENCY STABLE
 
-V5.6 — Évolution du Héros :
-- l’avatar évolue selon le niveau ;
-- rangs ajoutés :
-  - 1 Aventurier
-  - 5 Éclaireur
-  - 10 Guerrier
-  - 20 Champion
-  - 30 Commandant
-  - 50 Seigneur
-  - 75 Légende
-  - 100 Roi
-- équipement progressif :
-  - ceinture/brassards
-  - cape
-  - épaulières
-  - armure
-  - accents dorés
-  - aura
-  - couronne
-- musculature/posture plus marquée à haut niveau ;
-- rang affiché sous l’avatar ;
-- animation d’évolution lors d’un changement de rang.
+Version de secours propre, basée sur la V5.6.0 stable.
 
-Note direction artistique :
-L’image fournie sert de cible future pour une refonte graphique plus poussée, sans génération d’image.
+Objectif :
+- corriger l’erreur où app.js a été mis dans index.html ;
+- restaurer une structure propre :
+  - index.html = HTML
+  - app.js = JavaScript
+  - style.css = CSS
+- restaurer l’application fonctionnelle avec avatar évolutif par niveau.
+
+## IMPORTANT
+Dans GitHub, vérifie après upload :
+- index.html doit commencer par `<!DOCTYPE html>`
+- app.js doit commencer par `const KEY=`
+- style.css doit contenir du CSS
 
 ## Mise à jour GitHub
-Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
-
-## Test
-1. Vérifie que l’avatar affiche un rang.
-2. Utilise Accès du Roi / reset si besoin pour tester depuis zéro.
-3. Gagne de l’XP : à certains niveaux l’équipement change.
-4. Les fonctions existantes doivent rester stables.
+1. Dézippe.
+2. Ouvre le dossier extrait.
+3. Sélectionne uniquement le contenu du dossier, pas le dossier lui-même.
+4. Glisse dans GitHub.
+5. Commit changes.
+6. Attends Cloudflare Pages.
+7. Recharge avec Ctrl+F5.
