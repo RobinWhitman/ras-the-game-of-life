@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RAS — The Game of Life V4</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="splash">
+  <div class="splash-emblem">⚜</div>
+  <div class="splash-title">RAS</div>
+  <div class="splash-sub">THE GAME OF LIFE</div>
+</div>
+
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">RAS</div>
+  <button class="navbtn active" onclick="show('home',this)">🏰</button>
+  <button class="navbtn" onclick="show('mission',this)">⚔</button>
+  <button class="navbtn" onclick="show('archives',this)">📈</button>
+  <button class="navbtn" onclick="show('boss',this)">👑</button>
+  <button class="navbtn" onclick="show('achievements',this)">🏆</button>
+  <button class="navbtn" onclick="show('shop',this)">⚜</button>
+  <button class="navbtn" onclick="show('weekly',this)">📜</button>
+</aside>
+
+<main class="main">
+<section id="home" class="screen active">
+  <div class="hero">
+    <div class="heroCard">
+      <div class="rank">QG PERSONNEL</div>
+      <h1>RAS</h1>
+      <h1 class="h1-small">The Game of Life</h1>
+      <div class="subtitle">Become the highest level version of yourself.</div>
+      <div class="level">LVL <span id="level">1</span></div>
+      <div class="bar"><div class="fill" id="xpFill"></div></div>
+      <div class="stat"><span>XP</span><strong id="xpText">0 / 100</strong></div>
+      <div class="stat"><span>⚜ Glory</span><strong id="gloryText">0 ⚜</strong></div>
+      <div class="stat"><span>🔥 Série dominante</span><strong id="mainStreak">0 j</strong></div>
+      <div class="stat"><span>👑 Boss actif</span><strong id="homeBoss">—</strong></div>
+      <div class="bar"><div class="fill" id="dayFill"></div></div>
+      <div class="stat"><span>Progression Mission</span><strong id="dayPct">0%</strong></div>
+      <button class="primary" onclick="showById('mission')">▶ LANCER LA MISSION</button>
+      <button class="secondary" onclick="saveDay()">TERMINER LA MISSION</button>
+    </div>
+  </div>
+</section>
+
+<section id="mission" class="screen">
+  <div class="grid">
+    <div class="card span-12">
+      <h2>⚔ Mission du jour</h2>
+      <div class="stat"><span>Ordre principal</span><strong id="missionTitle">—</strong></div>
+      <button class="primary" onclick="prefillToday()">Charger mission du jour</button>
+      <button class="secondary" onclick="resetDay()">Réinitialiser mission</button>
+      <button class="primary" onclick="saveDay()">Terminer mission</button>
+    </div>
+    <div id="missionCards" class="span-12 grid"></div>
+    <div class="card span-12">
+      <h2>✅ Missions accomplies</h2>
+      <div id="completedMissions" class="grid"></div>
+    </div>
+  </div>
+</section>
+
+<section id="archives" class="screen">
+  <div class="grid">
+    <div class="card span-6"><h2>⚔ Habiletés</h2><div id="skills"></div></div>
+    <div class="card span-6"><h2>🔥 Séries</h2><div id="streaks"></div></div>
+    <div class="card span-6"><h2>⭕ Habit Wheel</h2><div id="circle" class="trackerWheel"></div></div>
+    <div class="card span-6"><h2>🌸 Mandala Discipline</h2><div id="mandala" class="mandala"></div></div>
+    <div class="card span-12"><h2>📈 Courbe de Discipline</h2><div id="disciplineGraph"></div></div>
+    <div class="card span-12"><h2>📜 Chroniques</h2><div id="history"></div></div>
+  </div>
+</section>
+
+<section id="boss" class="screen">
+  <div class="grid">
+    <div class="card span-12 boss-active">
+      <h2>👑 Boss actif</h2>
+      <select id="bossSelect"></select>
+      <div class="bar bossBar"><div class="fill" id="bossFill"></div></div>
+      <label>Progression Boss (%)</label>
+      <input id="bossProgress" type="number" min="0" max="100" value="0" />
+    </div>
+    <div class="card span-12"><h2>👹 Tableau des Boss</h2><div id="bossList"></div></div>
+  </div>
+</section>
+
+<section id="achievements" class="screen">
+  <div class="card"><h2>🏆 Succès</h2><div id="achievementList"></div></div>
+</section>
+
+<section id="shop" class="screen">
+  <div class="grid">
+    <div class="card span-6"><h2>⚜ Le Marchand</h2><div id="shopList"></div></div>
+    <div class="card span-6"><h2>Transactions</h2><div id="gloryLog"></div></div>
+  </div>
+</section>
+
+<section id="weekly" class="screen">
+  <div class="grid">
+    <div class="card span-6"><h2>📜 Débrief Hebdomadaire</h2><div id="weeklyStats"></div></div>
+    <div class="card span-6"><h2>🔥 Séries actuelles</h2><div id="weeklyStreaks"></div></div>
+    <div class="card span-12"><h2>📝 Rapport manuel</h2>
+      <label>Ce qui m'a fait progresser</label><textarea id="weeklyWin"></textarea>
+      <label>Ce qui m'a freiné</label><textarea id="weeklyFail"></textarea>
+      <label>Objectif semaine prochaine</label><textarea id="weeklyGoal"></textarea>
+    </div>
+  </div>
+</section>
+</main>
+</div>
+
+<div class="mobileNav">
+  <button class="active" onclick="show('home',this)">🏰</button>
+  <button onclick="show('mission',this)">⚔</button>
+  <button onclick="show('archives',this)">📈</button>
+  <button onclick="show('boss',this)">👑</button>
+  <button onclick="show('shop',this)">⚜</button>
+</div>
+
+<div id="toast" class="toast">+ XP</div>
+<div id="levelOverlay" class="levelOverlay">
+  <div class="levelBox">
+    <div class="levelLabel">LEVEL UP</div>
+    <div class="levelNumber">LVL <span id="levelUpNumber">1</span></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
