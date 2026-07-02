@@ -161,3 +161,15 @@ input,textarea,select{width:100%;background:#101010;color:var(--text);border:1px
   20%{opacity:1}
   to{transform:translateY(-170px) scale(1.1);opacity:0}
 }
+
+
+/* V4.1.3 — Protocoles par période */
+.periodGroup{
+  background:linear-gradient(145deg,rgba(37,37,42,.92),rgba(15,15,16,.96));
+}
+.periodGroup h2{
+  font-size:20px;
+}
+.periodGroup .missionCard{
+  min-height:210px;
+}

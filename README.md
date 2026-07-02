@@ -1,20 +1,17 @@
-# RAS — The Game of Life V4.1.2
+# RAS — The Game of Life V4.1.3
 
-Correctif :
-- logo affiché plus proprement ;
-- prêt pour logo PNG transparent ;
-- nouvelle animation Mission Complete façon remplissage lent + particules ;
-- correction esthétique QG.
+Correction structure mission :
+- ajout des protocoles par période ;
+- matin / repas / savoir / training / business / soir / débrief ;
+- ajout "visage dans la glace" ;
+- ajout "dents après chaque repas" ;
+- missions regroupées par moment de journée.
 
-## À remplacer dans GitHub
-- index.html
-- style.css
-- app.js
-- assets/ si tu ajoutes un nouveau logo transparent
+## À faire dans GitHub
+Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
 
 ## Test
 1. Va dans Mission.
-2. Clique ACCOMPLIR sur 2-3 cartes.
-3. Retour QG.
-4. Clique TERMINER LA MISSION.
-5. Tu dois voir une animation plein écran : remplissage doré + particules + récompense.
+2. Vérifie que les cartes sont rangées par périodes.
+3. Valide un protocole.
+4. Vérifie que la carte passe en Accompli dans le bon groupe.

@@ -4,13 +4,17 @@ const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"�
 const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
 const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
 const defaultObjectives=[
-{id:"main",title:"Quête principale",desc:"Terminer l'ordre principal du jour",xp:120,glory:25,skill:"domination"},
-{id:"training",title:"Épreuve physique",desc:"Training / mouvement / effort du jour",xp:100,glory:20,skill:"force",streak:"training"},
-{id:"apex",title:"Étude du savoir",desc:"APEX / lecture / développement personnel",xp:50,glory:10,skill:"intelligence",streak:"apex"},
-{id:"work",title:"Domination business",desc:"RAS / PHF / coaching / messages",xp:60,glory:12,skill:"domination"},
-{id:"nutrition",title:"Ravitaillement",desc:"5 repas / hydratation / batch / repas propres",xp:40,glory:8,skill:"sante",streak:"nutrition"},
-{id:"discipline",title:"Discipline du soir",desc:"Prière, brossage dents, CBD, coucher 22h30",xp:50,glory:10,skill:"discipline",streak:"sommeil"},
-{id:"journal",title:"Rapport de mission",desc:"Carnet rempli + journée clôturée",xp:20,glory:4,skill:"discipline",streak:"journal"}
+{id:"morning",period:"🌅 MATIN",title:"Protocole matin",desc:"Réveil 6h · visage dans la glace · soin visage · coiffure/barbe · préparation mentale",xp:45,glory:9,skill:"discipline"},
+{id:"meal1",period:"🍽️ REPAS",title:"Repas 1 + dents",desc:"Petit-déjeuner validé · brossage dents après repas",xp:25,glory:5,skill:"sante",streak:"nutrition"},
+{id:"study",period:"🧠 SAVOIR",title:"Bloc savoir",desc:"APEX · lecture · développement personnel",xp:60,glory:12,skill:"intelligence",streak:"apex"},
+{id:"training",period:"⚔️ TRAINING",title:"Épreuve physique",desc:"Training du jour · séance notée · douche salle · repas post-training",xp:120,glory:24,skill:"force",streak:"training"},
+{id:"meal2",period:"🍽️ REPAS",title:"Repas 2 + dents",desc:"Déjeuner / post-training validé · brossage dents après repas",xp:25,glory:5,skill:"sante",streak:"nutrition"},
+{id:"work",period:"👑 DOMINATION",title:"Bloc business",desc:"RAS · PHF · programmation · coaching · messages clients",xp:80,glory:16,skill:"domination"},
+{id:"meal3",period:"🍽️ REPAS",title:"Repas 3 + dents",desc:"Collation validée · brossage dents après repas",xp:20,glory:4,skill:"sante",streak:"nutrition"},
+{id:"meal4",period:"🍽️ REPAS",title:"Repas 4 + dents",desc:"Collation validée · brossage dents après repas",xp:20,glory:4,skill:"sante",streak:"nutrition"},
+{id:"meal5",period:"🍽️ REPAS",title:"Repas 5 + dents",desc:"Dîner validé · brossage dents après repas",xp:25,glory:5,skill:"sante",streak:"nutrition"},
+{id:"evening",period:"🌙 SOIR",title:"Protocole soir",desc:"Douche si nécessaire · rangement rapide · prière · CBD chill canapé · coucher 22h30",xp:60,glory:12,skill:"discipline",streak:"sommeil"},
+{id:"journal",period:"📜 DÉBRIEF",title:"Rapport de mission",desc:"Journée clôturée · notes rapides · préparation de demain",xp:30,glory:6,skill:"discipline",streak:"journal"}
 ];
 const achievements=[["Premier jour joué",s=>s.history.length>=1],["7 journées sauvegardées",s=>s.history.length>=7],["Level 10 atteint",s=>lvl(s.totalXp).level>=10],["250 Glory gagnées",s=>s.history.reduce((a,b)=>a+b.glory,0)>=250],["Série Training 7 jours",s=>s.streaks.training>=7],["Série Sommeil 7 jours",s=>s.streaks.sommeil>=7],["Journée parfaite 100%",s=>s.history.some(h=>h.pct===100)],["5 journées à 80%+",s=>s.history.filter(h=>h.pct>=80).length>=5],["Domination Lv.10",s=>Math.floor(s.skills.domination/100)+1>=10]];
 const defaultState={totalXp:0,glory:0,skills:{force:0,discipline:0,intelligence:0,domination:0,sante:0},streaks:{training:0,lecture:0,sommeil:0,priere:0,apex:0,nutrition:0,journal:0},done:{},history:[],gloryLog:[],bossIndex:0,bossProgress:0};
@@ -26,8 +30,15 @@ function prefillToday(){missionTitle.textContent=dailyMissions[new Date().getDay
 function renderMissionCards(){
   const active=defaultObjectives.filter(o=>!state.done[o.id]);
   const done=defaultObjectives.filter(o=>state.done[o.id]);
-  missionCards.innerHTML=active.map(cardHTML).join("");
-  completedMissions.innerHTML=done.length?done.map(cardHTML).join(""):"<div class='muted'>Aucune mission accomplie pour le moment.</div>";
+  missionCards.innerHTML=renderPeriodGroups(active);
+  completedMissions.innerHTML=done.length?renderPeriodGroups(done):"<div class='muted'>Aucune mission accomplie pour le moment.</div>";
+}
+function renderPeriodGroups(list){
+  const periods=[...new Set(list.map(o=>o.period))];
+  return periods.map(period=>{
+    const cards=list.filter(o=>o.period===period).map(cardHTML).join("");
+    return `<div class="card span-12 periodGroup"><h2>${period}</h2><div class="grid">${cards}</div></div>`;
+  }).join("");
 }
 function cardHTML(o){
   return `<div class="missionCard span-6 ${state.done[o.id]?'done':''}"><div class="rank">${skillsMap[o.skill]}</div><h2>${o.title}</h2><p class="muted">${o.desc}</p><div class="reward">+${o.xp} XP · +${o.glory} ⚜</div><button class="${state.done[o.id]?'secondary':'primary'}" onclick="toggleObjective('${o.id}')">${state.done[o.id]?'Annuler':'ACCOMPLIR'}</button></div>`;
