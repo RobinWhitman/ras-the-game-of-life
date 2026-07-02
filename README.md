@@ -1,36 +1,21 @@
-# RAS — The Game of Life V5.6.0
+# RAS — The Game of Life V5.6.1
 
-V5.6 — Évolution du Héros :
-- l’avatar évolue selon le niveau ;
-- rangs ajoutés :
-  - 1 Aventurier
-  - 5 Éclaireur
-  - 10 Guerrier
-  - 20 Champion
-  - 30 Commandant
-  - 50 Seigneur
-  - 75 Légende
-  - 100 Roi
-- équipement progressif :
-  - ceinture/brassards
-  - cape
-  - épaulières
-  - armure
-  - accents dorés
-  - aura
-  - couronne
-- musculature/posture plus marquée à haut niveau ;
-- rang affiché sous l’avatar ;
-- animation d’évolution lors d’un changement de rang.
-
-Note direction artistique :
-L’image fournie sert de cible future pour une refonte graphique plus poussée, sans génération d’image.
+Ajouts :
+- évolutions visuelles selon les Habiletés ;
+- Force : bras/torse plus massifs ;
+- Discipline : aura/posture plus stricte ;
+- Intelligence : grimoire/accessoire ;
+- Domination : aura dorée ;
+- Santé : glow vert + teint renforcé ;
+- Accès du Roi : ajout XP pour test ;
+- Accès du Roi : ajout XP d’Habileté pour test.
 
 ## Mise à jour GitHub
 Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
 
 ## Test
-1. Vérifie que l’avatar affiche un rang.
-2. Utilise Accès du Roi / reset si besoin pour tester depuis zéro.
-3. Gagne de l’XP : à certains niveaux l’équipement change.
-4. Les fonctions existantes doivent rester stables.
+1. Accès du Roi > 2323.
+2. Utilise +XP pour tester les rangs.
+3. Choisis une Habileté et ajoute +500 / +1000.
+4. Vérifie que l’avatar change visuellement.
+5. Vérifie que missions, boss, musique, sons fonctionnent encore.

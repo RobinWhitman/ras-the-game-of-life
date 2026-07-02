@@ -262,6 +262,27 @@
     </div>
     <div id="kingPanel" class="kingPanel">
       <h2>Commandes Royales</h2>
+      <div id="royalTestPanel" class="royalTestPanel">
+        <h2>Mode Test</h2>
+        <div class="royalGrid">
+          <button class="secondary" onclick="royalAddXp(100)">+100 XP</button>
+          <button class="secondary" onclick="royalAddXp(500)">+500 XP</button>
+          <button class="secondary" onclick="royalAddXp(1000)">+1000 XP</button>
+        </div>
+        <label>Habileté à tester</label>
+        <select id="royalSkillSelect">
+          <option value="force">⚔ Force</option>
+          <option value="discipline">🛡 Discipline</option>
+          <option value="intelligence">🧠 Intelligence</option>
+          <option value="domination">👑 Domination</option>
+          <option value="sante">❤️ Santé</option>
+        </select>
+        <div class="royalGrid">
+          <button class="secondary" onclick="royalAddSkill(100)">+100 Habileté</button>
+          <button class="secondary" onclick="royalAddSkill(500)">+500 Habileté</button>
+          <button class="secondary" onclick="royalAddSkill(1000)">+1000 Habileté</button>
+        </div>
+      </div>
       <button class="danger" onclick="royalReset()">Réinitialiser complètement l'application</button>
       <button class="primary" onclick="modifyCharacter()">Modifier le personnage</button>
       <p class="muted small">Action irréversible : XP, Glory, séries, archives, boss et missions seront effacés.</p>
