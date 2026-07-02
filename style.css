@@ -627,3 +627,32 @@ input,textarea,select{width:100%;background:#101010;color:var(--text);border:1px
 .gender-female .arm.left{left:25px}
 .gender-female .arm.right{right:25px}
 .gender-female .beard{display:none !important}
+
+
+/* V5.0.7 — Homme/Femme + barbe stable */
+.skin-light .head,.skin-light .ear,.skin-light .neck,.skin-light .arm{background:#d98d4f !important}
+.skin-medium .head,.skin-medium .ear,.skin-medium .neck,.skin-medium .arm{background:#b87546 !important}
+.skin-dark .head,.skin-dark .ear,.skin-dark .neck,.skin-dark .arm{background:#75462e !important}
+
+.beard-dark .beard{background:#3b2623 !important}
+.beard-blond .beard{background:#c59c3b !important}
+.beard-red .beard{background:#8f3f27 !important}
+.beard-grey .beard{background:#777 !important}
+
+/* Femme : cheveux longs + barbe supprimée */
+.gender-female .hair{
+  display:block !important;
+  height:112px !important;
+  top:4px !important;
+  left:16px !important;
+  width:136px !important;
+  clip-path:polygon(12% 0,88% 0,88% 18%,100% 18%,100% 92%,82% 92%,82% 100%,66% 100%,66% 80%,34% 80%,34% 100%,18% 100%,18% 92%,0 92%,0 18%,12% 18%) !important;
+}
+.gender-female .beard{display:none !important}
+.gender-female .torso{
+  left:42px !important;
+  width:84px !important;
+  clip-path:polygon(18% 0,82% 0,100% 100%,0 100%) !important;
+}
+.gender-female .arm.left{left:25px !important}
+.gender-female .arm.right{right:25px !important}

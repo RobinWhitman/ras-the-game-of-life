@@ -1,5 +1,5 @@
 
-const KEY="ras_v5_0_6";
+const KEY="ras_v5_0_7";
 const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"🧠 Intelligence",domination:"👑 Domination",sante:"❤️ Santé"};
 const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
 const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
@@ -217,7 +217,7 @@ function nextIntro(n){
   if(n===4) bindCreatorPreview();
 }
 function bindCreatorPreview(){
-  ["charName","charGender","charSkin","charHair","charBeard","charEyes","charTattoos"].forEach(id=>{
+  ["charName","charGender","charSkin","charHair","charBeard","charBeardColor","charEyes","charTattoos"].forEach(id=>{
     const el=document.getElementById(id);
     if(el && !el.dataset.bound){
       el.dataset.bound="1";
@@ -228,11 +228,11 @@ function bindCreatorPreview(){
 }
 function updateAvatarPreview(){
   if(!document.getElementById("avatarPreview")) return;
-  avatarPreview.className=`avatar pixelHero ${charSkin.value} ${charHair.value} ${charBeard.value} ${charEyes.value} ${charTattoos.value}`;
+  avatarPreview.className=`avatar pixelHero ${charGender.value} ${charSkin.value} ${charHair.value} ${charBeard.value} ${charBeardColor.value} ${charEyes.value} ${charTattoos.value}`;
   avatarNamePreview.textContent=charName.value || "Aventurier";
 }
 function saveCharacter(){
-  state.player={name:charName.value||"Robin",gender:charGender.value,skin:charSkin.value,hair:charHair.value,beard:charBeard.value,eyes:charEyes.value,tattoos:charTattoos.value};
+  state.player={name:charName.value||"Robin",gender:charGender.value,skin:charSkin.value,hair:charHair.value,beard:charBeard.value,beardColor:charBeardColor.value,eyes:charEyes.value,tattoos:charTattoos.value};
   state.onboarded=true;
   state.version="5.0.1";
   save();
@@ -249,18 +249,19 @@ function modifyCharacter(){
   nextIntro(4);
   setTimeout(()=>{
     charName.value=p.name||"Robin";
-    charGender.value=p.gender||"Homme";
+    charGender.value=p.gender||"gender-male";
     charSkin.value=p.skin||"skin-light";
     charHair.value=p.hair||"hair-dark";
     charBeard.value=p.beard||"beard-full";
+    charBeardColor.value=p.beardColor||"beard-dark";
     charEyes.value=p.eyes||"eyes-brown";
     charTattoos.value=p.tattoos||"tattoos-yes";
     updateAvatarPreview();
   },50);
 }
 function avatarHTML(){
-  const p=state.player||{name:"Robin",skin:"skin-light",hair:"hair-dark",beard:"beard-full",eyes:"eyes-brown",tattoos:"tattoos-yes"};
-  return `<div class="avatar pixelHero ${p.skin} ${p.hair} ${p.beard} ${p.eyes} ${p.tattoos}">
+  const p=state.player||{name:"Robin",gender:"gender-male",skin:"skin-light",hair:"hair-dark",beard:"beard-full",beardColor:"beard-dark",eyes:"eyes-brown",tattoos:"tattoos-yes"};
+  return `<div class="avatar pixelHero ${p.gender||'gender-male'} ${p.skin} ${p.hair} ${p.beard} ${p.beardColor||'beard-dark'} ${p.eyes} ${p.tattoos}">
     <div class="px hair"></div><div class="px head"></div><div class="px ear left"></div><div class="px ear right"></div>
     <div class="px eye left"></div><div class="px eye right"></div><div class="px beard"></div><div class="px neck"></div>
     <div class="px torso"></div><div class="px arm left"></div><div class="px arm right"></div>
