@@ -197,8 +197,9 @@
       <h2>👑 Boss actif</h2>
       <select id="bossSelect"></select>
       <div class="bar bossBar"><div class="fill" id="bossFill"></div></div>
-      <label>Progression Boss (%)</label>
-      <input id="bossProgress" type="number" min="0" max="100" value="0" />
+      <label>Progression Boss automatique (%)</label>
+      <input id="bossProgress" type="number" min="0" max="100" value="0" readonly />
+      <p class="muted small">Le Boss prend des dégâts quand tu accomplis des missions.</p>
     </div>
     <div class="card span-12"><h2>👹 Tableau des Boss</h2><div id="bossList"></div></div>
   </div>
@@ -283,6 +284,14 @@
       <div class="missionCompleteMain">MISSION ACCOMPLIE</div>
       <div id="missionCompleteReward" class="missionCompleteReward">+0 XP · +0 ⚜</div>
     </div>
+  </div>
+</div>
+
+<div id="bossDefeatedOverlay" class="bossDefeatedOverlay">
+  <div class="bossDefeatedBox">
+    <div class="bossDefeatedTitle">👑 BOSS VAINCU</div>
+    <div id="bossDefeatedName" class="bossDefeatedName">Boss</div>
+    <div class="bossDefeatedReward">+150 XP · +75 ⚜</div>
   </div>
 </div>
 

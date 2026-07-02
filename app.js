@@ -1,5 +1,5 @@
 
-const KEY="ras_v5_4_1";
+const KEY="ras_v5_5_0";
 const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"🧠 Intelligence",domination:"👑 Domination",sante:"❤️ Santé"};
 const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
 const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
@@ -72,11 +72,48 @@ function renderPeriodGroups(list){
 function cardHTML(o){
   return `<div class="missionCard span-6 ${state.done[o.id]?'done':''}"><div class="rank">${skillsMap[o.skill]}</div><h2>${o.title}</h2><p class="muted">${o.desc}</p><div class="reward">+${o.xp} XP · +${o.glory} ⚜</div><button class="${state.done[o.id]?'secondary':'primary'}" onclick="toggleObjective('${o.id}')">${state.done[o.id]?'Annuler':'ACCOMPLIR'}</button></div>`;
 }
+
+function bossDamageForObjective(o){
+  return Math.max(6,Math.round(o.xp/12));
+}
+function damageBoss(amount){
+  if(state.bossProgress>=100) return;
+  state.bossProgress=Math.min(100,(state.bossProgress||0)+amount);
+  if(state.bossProgress>=100){
+    defeatBoss();
+  }
+  save();
+}
+function healBoss(amount){
+  if(state.bossProgress>=100) return;
+  state.bossProgress=Math.max(0,(state.bossProgress||0)-amount);
+  save();
+}
+function defeatBoss(){
+  const bossName=bosses[state.bossIndex][0];
+  state.totalXp+=150;
+  state.glory+=75;
+  if(!state.defeatedBosses) state.defeatedBosses=[];
+  state.defeatedBosses.push({name:bossName,date:new Date().toISOString().slice(0,10)});
+  save();
+  setTimeout(()=>showBossDefeated(bossName),120);
+}
+function showBossDefeated(name){
+  if(document.getElementById("bossDefeatedName")) bossDefeatedName.textContent=name;
+  if(document.getElementById("bossDefeatedOverlay")){
+    bossDefeatedOverlay.classList.add("show");
+    companionSpeak("boss");
+    playSound("level");
+    setTimeout(()=>bossDefeatedOverlay.classList.remove("show"),2600);
+  }
+}
+
 function toggleObjective(id){
   const was=!!state.done[id];
   state.done[id]=!was;
   const o=defaultObjectives.find(x=>x.id===id);
   if(state.done[id]){
+    damageBoss(bossDamageForObjective(o));
     setCompanionDialogue("success");
     companionSpeak("success");
     playDialogueSound();
@@ -87,6 +124,8 @@ function toggleObjective(id){
     void floatReward.offsetWidth;
     floatReward.classList.add('show');
     if(navigator.vibrate) navigator.vibrate(45);
+  }else{
+    healBoss(bossDamageForObjective(o));
   }
   save();render();
 }
@@ -567,8 +606,8 @@ function renderStats(){
   renderTrackers();
   history.innerHTML=state.history.length?state.history.slice().reverse().map(h=>`<div class="item"><span>${h.date}<br><span class="muted">${h.mainQuest||""}</span></span><strong>${h.pct}% • +${h.xp} XP • +${h.glory} ⚜</strong></div>`).join(""):"<div class='muted'>Aucune chronique.</div>";
 }
-function renderBossSelect(){bossSelect.innerHTML=bosses.map((b,i)=>`<option value="${i}">${b[0]}</option>`).join("");bossSelect.value=state.bossIndex;bossProgress.value=state.bossProgress;bossSelect.oninput=()=>{state.bossIndex=+bossSelect.value;save();render()};bossProgress.oninput=()=>{state.bossProgress=+bossProgress.value;save();render()}}
-function renderBoss(){bossFill.style.width=(state.bossProgress||0)+"%";bossList.innerHTML=bosses.map((b,i)=>`<div class="item ${i==state.bossIndex?"":"locked"}"><span><strong>${b[0]}</strong><br><span class="muted">${b[1]} • ${skillsMap[b[2]]}</span></span><button class="secondary" onclick="state.bossIndex=${i};save();render()">Activer</button></div>`).join("")}
+function renderBossSelect(){bossSelect.innerHTML=bosses.map((b,i)=>`<option value="${i}">${b[0]}</option>`).join("");bossSelect.value=state.bossIndex;bossProgress.value=state.bossProgress;bossSelect.oninput=()=>{state.bossIndex=+bossSelect.value;state.bossProgress=0;save();render()};bossProgress.oninput=()=>{}}
+function renderBoss(){bossFill.style.width=(state.bossProgress||0)+"%";bossFill.classList.toggle("defeated",(state.bossProgress||0)>=100);bossList.innerHTML=bosses.map((b,i)=>`<div class="item ${i==state.bossIndex?"":"locked"}"><span><strong>${b[0]}</strong><br><span class="muted">${b[1]} • ${skillsMap[b[2]]}</span></span><button class="secondary" onclick="state.bossIndex=${i};state.bossProgress=0;save();render();flash('NOUVEAU BOSS ACTIVÉ')">Activer</button></div>`).join("")}
 function renderShop(){let items=[["🍺 Petite bière",100],["🎮 1h Geek",200],["🍔 Restaurant",500],["🏍 Balade moto",700]];shopList.innerHTML=items.map(([n,c])=>`<div class="item"><span>${n}</span><button class="primary" onclick="buy('${n}',${c})">${c} ⚜</button></div>`).join("");gloryLog.innerHTML=state.gloryLog.length?state.gloryLog.slice().reverse().map(x=>`<div class="stat"><span>${x.date} — ${x.name}</span><strong>-${x.cost} ⚜</strong></div>`).join(""):"<div class='muted'>Aucune transaction.</div>"}
 function renderAchievements(){achievementList.innerHTML=achievements.map(([n,test])=>`<div class="item ${test(state)?"":"locked"}"><span>${test(state)?"🏆":"🔒"} ${n}</span><strong>${test(state)?"Débloqué":"Verrouillé"}</strong></div>`).join("")}
 function renderTrackers(){let last=state.history.slice(-31),last7=state.history.slice(-7);circle.innerHTML="";mandala.innerHTML="";for(let i=0;i<31;i++){let d=last[i];circle.innerHTML+=`<div class="dayDot ${d&&d.pct>=80?'done':''}">${i+1}</div>`;mandala.innerHTML+=`<div class="petal ${d&&d.pct>=80?'done':''}"></div>`}disciplineGraph.innerHTML=last7.map(d=>`<div class="stat"><span>${d.date}</span><strong>${d.pct}%</strong></div><div class="graphBar"><div style="width:${d.pct}%"></div></div>`).join("")||"<div class='muted'>Aucune donnée.</div>"}
