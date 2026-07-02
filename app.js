@@ -1,5 +1,5 @@
 
-const KEY="ras_v5_3_7";
+const KEY="ras_v5_3_8";
 const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"🧠 Intelligence",domination:"👑 Domination",sante:"❤️ Santé"};
 const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
 const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
@@ -400,31 +400,34 @@ function startMusic(){
   if(!state.music) return;
   stopMusic(false);
 
-  // Heroic 16-bit fanfare / glockenspiel loop
-  const trumpet=[523,659,784,1046,784,659,587,659,784,988,1174,988,784,659,523,392];
-  const glock=[1046,1318,1568,2093,1568,1318,1174,1318,1568,1976,2349,1976,1568,1318,1046,784];
-  const bass=[130,130,196,196,174,174,146,146];
+  // V5.3.8 — previous better air + current heroic 16-bit fanfare/glock instrument
+  const lead=[659,784,988,1174,988,784,659,587,659,784,880,988,880,784,659,523];
+  const harmony=[330,392,494,587,494,392,330,294,330,392,440,494,440,392,330,262];
+  const bass=[165,165,196,196,147,147,174,174];
 
   let step=0;
   function loop(){
     if(!state.music) return;
-    const i=step%trumpet.length;
-    const t=trumpet[i];
-    const g=glock[i];
+    const i=step%lead.length;
+    const m=lead[i];
+    const h=harmony[i];
     const b=bass[Math.floor(step/2)%bass.length];
 
-    playTrumpet(t,0,.18,.030);
-    playTrumpet(t*0.75,.035,.16,.010);
+    // heroic synth trumpet lead
+    playTrumpet(m,0,.16,.026);
 
-    if(step%2===0) playMusicTone(b,0,.32,"triangle",.016);
+    // light harmony, less invasive than V5.3.7
+    if(step%2===0) playTrumpet(h,.055,.12,.010);
 
-    // glockenspiel crystalline echo
-    playGlock(g,.08,.12,.020);
-    playGlock(g,.20,.09,.010);
-    playGlock(g,.32,.07,.006);
+    // soft bass foundation
+    if(step%2===0) playMusicTone(b,0,.30,"triangle",.014);
+
+    // crystalline glockenspiel echo
+    if(step%4===0) playGlock(m*2,.10,.16,.016);
+    if(step%8===7) playGlock(1318,.05,.18,.014);
 
     step++;
-    musicTimer=setTimeout(loop,360);
+    musicTimer=setTimeout(loop,310);
   }
   loop();
 }
