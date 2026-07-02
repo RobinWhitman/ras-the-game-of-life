@@ -1,21 +1,17 @@
-# RAS — The Game of Life V5.2.0
+# RAS — The Game of Life V5.3.1
 
-V5.2 — Les Ordres du Jour :
-- Ordres du Jour enrichis ;
-- accueil personnalisé avec le nom du personnage ;
-- résumé du jour : missions, boss, série, prochaine mission ;
-- les missions apparaissent désormais une par une ;
-- la mission actuelle est mise en avant ;
-- les missions restantes passent dans une file secondaire ;
-- les missions terminées restent en bas.
+Correctif Compagnon :
+- mini-avatar permanent en haut à droite ;
+- bulle de dialogue visible sur tous les écrans ;
+- clic sur le mini-avatar = nouvelle phrase ;
+- dialogue contextuel quand on change d’onglet ;
+- l’ancien dialogue du QG reste présent.
 
 ## Mise à jour GitHub
 Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
 
 ## Test
-1. Ouvre l’app : page Ordres du Jour.
-2. Vérifie le message “Bonjour [nom]”.
-3. Clique Commencer la journée.
-4. Vérifie qu’une seule mission est mise en avant.
-5. Clique Accomplir la mission : la suivante doit apparaître.
-6. Vérifie que la mission accomplie descend dans Missions terminées.
+1. Vérifie le mini-avatar en haut à droite sur tous les écrans.
+2. Clique dessus : nouvelle phrase.
+3. Change d’écran : nouvelle phrase contextuelle.
+4. Accomplis une mission : phrase de félicitation.

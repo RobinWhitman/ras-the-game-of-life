@@ -1,5 +1,5 @@
 
-const KEY="ras_v5_2_0";
+const KEY="ras_v5_3_1";
 const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"🧠 Intelligence",domination:"👑 Domination",sante:"❤️ Santé"};
 const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
 const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
@@ -23,7 +23,7 @@ function need(l){return Math.round(100*Math.pow(l,1.35))}
 function lvl(xp){let level=1,x=xp;while(x>=need(level)){x-=need(level);level++}return{level,current:x,needed:need(level)}}
 function load(){try{return {...structuredClone(defaultState),...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch{return structuredClone(defaultState)}}
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
-function show(id,btn){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".navbtn,.mobileNav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");render();updateSoundButton()}
+function show(id,btn){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".navbtn,.mobileNav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");render();setTimeout(()=>{companionSpeak(dialogueTypeForScreen(id));if(id==="qg")setCompanionDialogue("qg");},80);updateSoundButton()}
 
 function toggleMoreMenu(force){
   if(!document.getElementById("moreMenu")) return;
@@ -45,14 +45,14 @@ function renderMissionCards(){
   if(document.getElementById("currentMissionZone")){
     currentMissionZone.innerHTML=current?`
       <div class="currentMissionCard">
-        <div class="missionPeriod">${current.period}</div>
+        <div class="companionMini">${pickDialogue("mission")}</div><div class="missionPeriod">${current.period}</div>
         <h2>${current.title}</h2>
         <p>${current.desc}</p>
         <div class="currentMissionReward">+${current.xp} XP · +${current.glory} ⚜</div>
         <button class="primary" onclick="toggleObjective('${current.id}')">ACCOMPLIR LA MISSION</button>
       </div>`:
       `<div class="currentMissionCard">
-        <div class="missionPeriod">✅ JOURNÉE COMPLÈTE</div>
+        <div class="companionMini">${pickDialogue("complete")}</div><div class="missionPeriod">✅ JOURNÉE COMPLÈTE</div>
         <h2>Toutes les missions sont accomplies.</h2>
         <p>Retourne au QG et termine officiellement la mission du jour.</p>
         <button class="primary" onclick="showById('home')">Retour aux Ordres</button>
@@ -77,6 +77,9 @@ function toggleObjective(id){
   state.done[id]=!was;
   const o=defaultObjectives.find(x=>x.id===id);
   if(state.done[id]){
+    setCompanionDialogue("success");
+    companionSpeak("success");
+    playDialogueSound();
     playSound("cling");
     flash(`+${o.xp} XP  +${o.glory} ⚜`);
     floatReward.textContent=`+${o.xp} XP   +${o.glory} ⚜`;
@@ -102,6 +105,102 @@ function animateNumber(from,to,duration,onUpdate,onDone){
   }
   requestAnimationFrame(tick);
 }
+
+const companionDialogues={
+  morning:[
+    "Une nouvelle journée commence.",
+    "Chaque mission accomplie renforce ton personnage.",
+    "Aujourd’hui, avance sans négocier avec la faiblesse.",
+    "Un Roi ne gagne pas par hasard. Il répète ses protocoles.",
+    "Tes ordres sont prêts. À toi de jouer."
+  ],
+  qg:[
+    "Tes ordres sont prêts.",
+    "Le royaume se construit mission après mission.",
+    "Tu n’as pas besoin d’être parfait. Tu dois avancer.",
+    "La discipline est ton arme principale.",
+    "Le Boss ne tombera pas tout seul."
+  ],
+  mission:[
+    "Une mission à la fois.",
+    "Concentre-toi sur celle-ci. Le reste attendra.",
+    "Valide proprement. Puis passe à la suivante.",
+    "C’est ici que l’XP se gagne.",
+    "La prochaine victoire est juste devant toi."
+  ],
+  success:[
+    "Bien joué.",
+    "Mission accomplie.",
+    "Une de moins. Continue.",
+    "Le système fonctionne quand tu l’appliques.",
+    "Ton personnage progresse."
+  ],
+  complete:[
+    "Toutes les missions sont accomplies.",
+    "Retourne au QG. La journée est presque scellée.",
+    "Le Boss a senti le coup passer.",
+    "Belle exécution.",
+    "Mission complète. Reviens demain plus fort."
+  ],
+  streak:[
+    "La série continue. Ne la casse pas.",
+    "Chaque jour validé rend le suivant plus facile.",
+    "Tu construis une dynamique dangereuse pour tes anciennes excuses."
+  ]
+};
+function pickDialogue(type="qg"){
+  const list=companionDialogues[type]||companionDialogues.qg;
+  return list[Math.floor(Math.random()*list.length)];
+}
+function setCompanionDialogue(type="qg"){
+  const text=pickDialogue(type);
+  if(document.getElementById("companionBubble")){
+    companionBubble.textContent=text;
+    companionBubble.classList.remove("dialoguePulse");
+    void companionBubble.offsetWidth;
+    companionBubble.classList.add("dialoguePulse");
+  }
+  return text;
+}
+function playDialogueSound(){
+  if(typeof playSound==="function" && state.sound){
+    tone(523,0,.045,"triangle",.025);
+    tone(659,.05,.045,"triangle",.022);
+  }
+}
+
+
+function dialogueTypeForScreen(id){
+  if(id==="home") return "morning";
+  if(id==="qg") return "qg";
+  if(id==="mission") return "mission";
+  if(id==="boss") return "qg";
+  if(id==="shop") return "qg";
+  if(id==="achievements") return "success";
+  if(id==="weekly") return "complete";
+  return "qg";
+}
+function renderGlobalCompanion(){
+  if(!document.getElementById("globalCompanion")) return;
+  globalAvatarMini.innerHTML=avatarHTML();
+  if(!globalDialogue.dataset.ready){
+    globalDialogue.dataset.ready="1";
+    globalDialogue.textContent=pickDialogue("qg");
+  }
+}
+function companionSpeak(type="qg"){
+  if(type==="manual") type="qg";
+  const text=pickDialogue(type);
+  if(document.getElementById("globalDialogue")){
+    globalDialogue.textContent=text;
+    globalDialogue.classList.remove("speak");
+    void globalDialogue.offsetWidth;
+    globalDialogue.classList.add("speak");
+  }
+  playDialogueSound();
+  return text;
+}
+
 function render(){
   let c=calc(), targetXp=state.totalXp+c.xp, targetGlory=state.glory+c.glory, l=lvl(targetXp);
   animateNumber(displayXp,targetXp,450,v=>{displayXp=v;const dl=lvl(v);level.textContent=dl.level;xpText.textContent=`${dl.current} / ${dl.needed}`;xpFill.style.width=`${Math.round(dl.current/dl.needed*100)}%`;},()=>{if(l.level>displayLevel)showLevelUp(l.level);displayLevel=l.level});
@@ -123,8 +222,9 @@ function render(){
   if(document.getElementById("qgGlory")) qgGlory.textContent=(state.glory+c.glory)+" ⚜";
   if(document.getElementById("qgBoss")) qgBoss.textContent=bosses[state.bossIndex][0];
   if(document.getElementById("qgAvatarMount")) qgAvatarMount.innerHTML=avatarHTML();
+  if(document.getElementById("companionBubble") && !companionBubble.dataset.ready){companionBubble.dataset.ready="1";setCompanionDialogue("qg");}
 
-  renderMissionCards();renderStats();renderBoss();renderShop();renderAchievements();renderWeekly();
+  renderGlobalCompanion();renderMissionCards();renderStats();renderBoss();renderShop();renderAchievements();renderWeekly();
 }
 function renderStats(){
   skills.innerHTML=Object.entries(skillsMap).map(([k,label])=>`<div class="stat"><span>${label}</span><strong>Lv. ${Math.floor(state.skills[k]/100)+1}</strong></div><div class="bar"><div class="fill" style="width:${state.skills[k]%100}%"></div></div>`).join("");
@@ -271,7 +371,10 @@ function saveCharacter(){
   onboarding.classList.remove("show");
   if(document.getElementById("splash")) splash.style.display="";
   render();
+  renderGlobalCompanion();
+  companionSpeak("qg");
   flash("PERSONNAGE CRÉÉ");
+  setTimeout(()=>{if(document.getElementById("companionBubble")) companionBubble.textContent="Bienvenue dans ton aventure.";},400);
   if(typeof playSound==="function") playSound("king");
 }
 function modifyCharacter(){
