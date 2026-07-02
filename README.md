@@ -1,16 +1,15 @@
-# RAS — The Game of Life V5.3.5
+# RAS — The Game of Life V5.3.6
 
 Corrections :
-- compagnon encore rapproché de la bulle ;
-- personnage replacé pour ne plus sortir de l’écran PC ;
-- affichage mobile du personnage forcé/corrigé ;
-- musique rendue plus rétro/SNES-like avec notes plus courtes et arpèges.
+- compagnon déplacé à gauche sur PC pour ne plus sortir de l’écran ;
+- mobile : carré noir supprimé, sprite réduit/recentré ;
+- musique : même air, mais instrument remplacé par fanfare rétro 16-bit + glockenspiel cristallin avec écho.
 
 ## Mise à jour GitHub
 Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
 
 ## Test
-1. PC : le personnage ne doit plus sortir à droite.
-2. PC : la bulle reste au même endroit, le personnage se rapproche.
-3. Mobile : le personnage doit apparaître à côté de la bulle.
-4. Music ON : boucle plus mélodique, plus proche RPG SNES.
+1. PC : compagnon entièrement visible.
+2. Mobile : personnage visible, pas de carré noir.
+3. Mobile : sprite aligné proprement.
+4. Music ON : timbre plus fanfare/16-bit + notes cristallines.

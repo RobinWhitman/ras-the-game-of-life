@@ -1,5 +1,5 @@
 
-const KEY="ras_v5_3_5";
+const KEY="ras_v5_3_6";
 const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"🧠 Intelligence",domination:"👑 Domination",sante:"❤️ Santé"};
 const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
 const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
@@ -380,12 +380,21 @@ function playMusicTone(freq,start,duration,type="square",gain=.035){
   osc.type=type;
   osc.frequency.setValueAtTime(freq,ctx.currentTime+start);
   g.gain.setValueAtTime(0,ctx.currentTime+start);
-  g.gain.linearRampToValueAtTime(gain,ctx.currentTime+start+.012);
+  g.gain.linearRampToValueAtTime(gain,ctx.currentTime+start+.008);
   g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+start+duration);
   osc.connect(g);
   g.connect(ctx.destination);
   osc.start(ctx.currentTime+start);
   osc.stop(ctx.currentTime+start+duration+.04);
+}
+function playTrumpet(freq,start,duration,gain=.026){
+  playMusicTone(freq,start,duration,"sawtooth",gain);
+  playMusicTone(freq*2,start+.004,duration*.82,"square",gain*.25);
+}
+function playGlock(freq,start,duration=.16,gain=.018){
+  playMusicTone(freq,start,duration,"sine",gain);
+  playMusicTone(freq,start+.11,duration*.70,"sine",gain*.38);
+  playMusicTone(freq,start+.22,duration*.45,"sine",gain*.18);
 }
 function startMusic(){
   if(!state.music) return;
@@ -401,19 +410,19 @@ function startMusic(){
     const h=harmony[i];
     const b=bass[Math.floor(step/2)%bass.length];
 
-    // Plucked SNES-like square lead
-    playMusicTone(m,0,.11,"square",.030);
-    playMusicTone(h,.055,.10,"triangle",.014);
+    // 16-bit heroic synth trumpet lead
+    playTrumpet(m,0,.16,.024);
+    if(step%2===0) playTrumpet(h,.055,.13,.012);
 
-    // Soft bass every two steps
-    if(step%2===0) playMusicTone(b,0,.26,"triangle",.018);
+    // Crystalline glockenspiel echo
+    if(step%4===0) playGlock(m*2,.10,.18,.018);
+    if(step%8===7) playGlock(1318,.05,.20,.016);
 
-    // Tiny sparkle every 4 steps, chest/zelda-like color without copying a melody
-    if(step%4===0) playMusicTone(m*2,.12,.07,"square",.012);
-    if(step%8===7) playMusicTone(1318,.04,.08,"triangle",.010);
+    // Soft triangle bass
+    if(step%2===0) playMusicTone(b,0,.30,"triangle",.014);
 
     step++;
-    musicTimer=setTimeout(loop,285);
+    musicTimer=setTimeout(loop,310);
   }
   loop();
 }
