@@ -1,23 +1,14 @@
-# RAS — The Game of Life V4.1.0
+# RAS — The Game of Life V4.1.1
 
-Version structurée du projet.
+Correctif :
+- suppression des icônes parasites desktop ;
+- correction CSS ;
+- logo premium intégré ;
+- animation XP/Glory plus visible.
 
-## Fichiers
-- `index.html` : structure de l'application
-- `style.css` : design et animations
-- `app.js` : logique du jeu
-
-## Upload GitHub
-1. Créer un dépôt GitHub.
-2. Ajouter ces 3 fichiers à la racine.
-3. Connecter Netlify au dépôt.
-4. Publier.
-
-## V4.1.0
-- animations XP
-- animations Glory
-- splash screen
-- transitions entre scènes
-- cartes de mission vivantes
-- mission complete
-- level up overlay
+## Test rapide
+1. Ouvrir Mission.
+2. Cliquer sur ACCOMPLIR.
+3. Vérifier : carte accomplie, notification en haut, texte flottant XP/Glory, XP/Glory qui montent au QG.
+4. Cliquer Terminer mission.
+5. Vérifier Mission Complete et Level Up si niveau atteint.
