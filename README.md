@@ -1,14 +1,20 @@
-# RAS — The Game of Life V4.1.1
+# RAS — The Game of Life V4.1.2
 
 Correctif :
-- suppression des icônes parasites desktop ;
-- correction CSS ;
-- logo premium intégré ;
-- animation XP/Glory plus visible.
+- logo affiché plus proprement ;
+- prêt pour logo PNG transparent ;
+- nouvelle animation Mission Complete façon remplissage lent + particules ;
+- correction esthétique QG.
 
-## Test rapide
-1. Ouvrir Mission.
-2. Cliquer sur ACCOMPLIR.
-3. Vérifier : carte accomplie, notification en haut, texte flottant XP/Glory, XP/Glory qui montent au QG.
-4. Cliquer Terminer mission.
-5. Vérifier Mission Complete et Level Up si niveau atteint.
+## À remplacer dans GitHub
+- index.html
+- style.css
+- app.js
+- assets/ si tu ajoutes un nouveau logo transparent
+
+## Test
+1. Va dans Mission.
+2. Clique ACCOMPLIR sur 2-3 cartes.
+3. Retour QG.
+4. Clique TERMINER LA MISSION.
+5. Tu dois voir une animation plein écran : remplissage doré + particules + récompense.

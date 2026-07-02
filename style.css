@@ -49,3 +49,115 @@ input,textarea,select{width:100%;background:#101010;color:var(--text);border:1px
 .levelOverlay{position:fixed;inset:0;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;z-index:900;opacity:0;visibility:hidden;transition:.25s}.levelOverlay.show{opacity:1;visibility:visible}.levelBox{text-align:center;border:1px solid var(--gold);border-radius:24px;padding:42px 70px;background:radial-gradient(circle at top,rgba(240,210,122,.16),#101010 60%);box-shadow:0 0 80px rgba(200,162,58,.25)}.levelLabel{font-size:34px;color:var(--gold2);letter-spacing:4px}.levelNumber{font-size:60px;color:var(--gold);font-weight:900}
 .mobileNav{display:none}
 @media(max-width:850px){.main-logo{width:min(280px,76vw)}.app{display:block}.sidebar{display:none}.main{padding:14px;padding-bottom:86px}.mobileNav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#101010;border-top:1px solid var(--line);z-index:10;justify-content:space-around;padding:8px}.mobileNav button{width:44px;height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#202024;color:var(--text);font-size:20px}.mobileNav button.active{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#111}.hero{min-height:calc(100vh - 110px)}.heroCard{padding:28px 18px;border-radius:22px}h1{font-size:29px}.subtitle{font-size:14px}.level{font-size:54px}.span-4,.span-6,.span-8{grid-column:span 12}.card,.missionCard{padding:17px;border-radius:18px}.toast{left:14px;right:14px;top:14px;text-align:center}}
+
+
+/* V4.1.2 — logo cleaner */
+.splash-logo,
+.main-logo,
+.side-logo{
+  mix-blend-mode:screen;
+  background:transparent;
+}
+
+/* V4.1.2 — Mission Complete water-fill overlay */
+.missionCompleteOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.82);
+  z-index:950;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  visibility:hidden;
+  transition:.25s ease;
+}
+.missionCompleteOverlay.show{
+  opacity:1;
+  visibility:visible;
+}
+.missionCompleteBox{
+  position:relative;
+  width:min(520px,86vw);
+  height:330px;
+  border:1px solid var(--gold);
+  border-radius:28px;
+  overflow:hidden;
+  background:linear-gradient(145deg,#151515,#080808);
+  box-shadow:0 0 90px rgba(200,162,58,.22), inset 0 1px 0 rgba(255,255,255,.05);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.waterFill{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:0%;
+  background:linear-gradient(180deg,rgba(240,210,122,.85),rgba(200,162,58,.55));
+  box-shadow:0 0 40px rgba(200,162,58,.30);
+  animation:waterRise 2.2s ease forwards;
+}
+.waterFill:before{
+  content:"";
+  position:absolute;
+  top:-18px;
+  left:-10%;
+  width:120%;
+  height:36px;
+  background:radial-gradient(ellipse at center,rgba(240,210,122,.55),transparent 60%);
+  animation:wave 1.4s ease-in-out infinite;
+}
+@keyframes waterRise{
+  from{height:0%}
+  to{height:100%}
+}
+@keyframes wave{
+  0%,100%{transform:translateX(-3%)}
+  50%{transform:translateX(3%)}
+}
+.missionCompleteContent{
+  position:relative;
+  z-index:3;
+}
+.missionCompleteTitle{
+  color:#111;
+  background:linear-gradient(180deg,var(--gold2),var(--gold));
+  padding:10px 18px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:2px;
+  display:inline-block;
+  margin-bottom:18px;
+}
+.missionCompleteMain{
+  color:var(--gold2);
+  font-size:34px;
+  font-weight:900;
+  letter-spacing:3px;
+  text-shadow:0 0 24px rgba(200,162,58,.35);
+}
+.missionCompleteReward{
+  color:var(--text);
+  margin-top:14px;
+  font-size:20px;
+  font-weight:800;
+}
+.particle{
+  position:absolute;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:var(--gold2);
+  opacity:.85;
+  animation:particleFloat 2.2s ease-out forwards;
+}
+@keyframes particleFloat{
+  from{transform:translateY(80px) scale(.6);opacity:0}
+  20%{opacity:1}
+  to{transform:translateY(-170px) scale(1.1);opacity:0}
+}
