@@ -1,5 +1,5 @@
 
-const KEY="ras_v5_0_7";
+const KEY="ras_v5_2_0";
 const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"🧠 Intelligence",domination:"👑 Domination",sante:"❤️ Santé"};
 const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
 const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
@@ -34,10 +34,32 @@ function toggleMoreMenu(force){
 function showById(id){show(id,null)}
 function init(){renderBossSelect();prefillToday();displayXp=state.totalXp;displayGlory=state.glory;displayLevel=lvl(state.totalXp).level;render()}
 function prefillToday(){missionTitle.textContent=dailyMissions[new Date().getDay()][0]}
+function nextActiveObjective(){
+  return defaultObjectives.find(o=>!state.done[o.id]) || null;
+}
 function renderMissionCards(){
   const active=defaultObjectives.filter(o=>!state.done[o.id]);
   const done=defaultObjectives.filter(o=>state.done[o.id]);
-  missionCards.innerHTML=renderPeriodGroups(active);
+  const current=nextActiveObjective();
+
+  if(document.getElementById("currentMissionZone")){
+    currentMissionZone.innerHTML=current?`
+      <div class="currentMissionCard">
+        <div class="missionPeriod">${current.period}</div>
+        <h2>${current.title}</h2>
+        <p>${current.desc}</p>
+        <div class="currentMissionReward">+${current.xp} XP · +${current.glory} ⚜</div>
+        <button class="primary" onclick="toggleObjective('${current.id}')">ACCOMPLIR LA MISSION</button>
+      </div>`:
+      `<div class="currentMissionCard">
+        <div class="missionPeriod">✅ JOURNÉE COMPLÈTE</div>
+        <h2>Toutes les missions sont accomplies.</h2>
+        <p>Retourne au QG et termine officiellement la mission du jour.</p>
+        <button class="primary" onclick="showById('home')">Retour aux Ordres</button>
+      </div>`;
+  }
+
+  missionCards.innerHTML=active.length?active.slice(1).map(cardHTML).join(""):"<div class='muted'>Aucune mission restante.</div>";
   completedMissions.innerHTML=done.length?renderPeriodGroups(done):"<div class='muted'>Aucune mission accomplie pour le moment.</div>";
 }
 function renderPeriodGroups(list){
@@ -86,6 +108,16 @@ function render(){
   animateNumber(displayGlory,targetGlory,450,v=>{displayGlory=v;gloryText.textContent=v+" ⚜"});
   let pct=c.total?Math.round(c.done/c.total*100):0;dayPct.textContent=pct+"%";dayFill.style.width=pct+"%";
   mainStreak.textContent=Math.max(...Object.values(state.streaks))+" j";homeBoss.textContent=bosses[state.bossIndex][0];
+  if(document.getElementById("ordersGreeting")){
+    const p=state.player||{name:"Robin"};
+    ordersGreeting.textContent=`Bonjour ${p.name||"Robin"}.`;
+    ordersMissionCount.textContent=defaultObjectives.filter(o=>!state.done[o.id]).length;
+    ordersBoss.textContent=bosses[state.bossIndex][0];
+    ordersStreak.textContent=Math.max(...Object.values(state.streaks))+" j";
+    const nxt=nextActiveObjective();
+    ordersNextMission.textContent=nxt?nxt.title:"Journée complète";
+  }
+
   if(document.getElementById("qgLevel")) qgLevel.textContent=l.level;
   if(document.getElementById("qgXpFill")) qgXpFill.style.width=`${Math.round(l.current/l.needed*100)}%`;
   if(document.getElementById("qgGlory")) qgGlory.textContent=(state.glory+c.glory)+" ⚜";

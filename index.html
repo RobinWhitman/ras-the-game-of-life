@@ -104,7 +104,14 @@
     <div class="heroCard">
       <div class="rank">📜 ORDRES DU JOUR</div>
       <img class="main-logo" src="assets/logo-premium.png" alt="RAS Logo" />
-      <div class="subtitle">Become the highest level version of yourself.</div>
+      <div id="ordersGreeting" class="ordersGreeting">Bonjour.</div>
+      <div class="subtitle">Aujourd’hui est un nouveau jour. Entre dans l’arène et avance mission après mission.</div>
+      <div class="ordersBriefing">
+        <div class="orderLine"><span>⚔ Missions disponibles</span><strong id="ordersMissionCount">0</strong></div>
+        <div class="orderLine"><span>👑 Boss actif</span><strong id="ordersBoss">—</strong></div>
+        <div class="orderLine"><span>🔥 Série dominante</span><strong id="ordersStreak">0 j</strong></div>
+        <div class="orderLine"><span>🎯 Prochaine mission</span><strong id="ordersNextMission">—</strong></div>
+      </div>
       <div class="level">LVL <span id="level">1</span></div>
       <div class="bar"><div class="fill" id="xpFill"></div></div>
       <div class="stat"><span>XP</span><strong id="xpText">0 / 100</strong></div>
@@ -113,7 +120,7 @@
       <div class="stat"><span>👑 Boss actif</span><strong id="homeBoss">—</strong></div>
       <div class="bar"><div class="fill" id="dayFill"></div></div>
       <div class="stat"><span>Progression Mission</span><strong id="dayPct">0%</strong></div>
-      <button class="primary" onclick="showById('qg')">▶ COMMENCER L’AVENTURE</button>
+      <button class="primary" onclick="showById('qg')">▶ COMMENCER LA JOURNÉE</button>
       <button class="secondary" onclick="saveDay()">TERMINER LA MISSION</button>
     </div>
   </div>
@@ -143,9 +150,13 @@
       <button class="secondary" onclick="resetDay()">Réinitialiser mission</button>
       <button class="primary" onclick="saveDay()">Terminer mission</button>
     </div>
-    <div id="missionCards" class="span-12 grid"></div>
+    <div id="currentMissionZone" class="span-12"></div>
+    <div class="card span-12 missionQueue">
+      <h2>🧭 File de mission</h2>
+      <div id="missionCards" class="grid"></div>
+    </div>
     <div class="card span-12">
-      <h2>✅ Missions accomplies</h2>
+      <h2>✅ Missions terminées</h2>
       <div id="completedMissions" class="grid"></div>
     </div>
   </div>

@@ -656,3 +656,19 @@ input,textarea,select{width:100%;background:#101010;color:var(--text);border:1px
 }
 .gender-female .arm.left{left:25px !important}
 .gender-female .arm.right{right:25px !important}
+
+
+/* V5.2.0 — Ordres du Jour + missions une par une */
+.ordersGreeting{color:var(--gold2);font-size:26px;font-weight:900;margin:12px 0 8px;letter-spacing:1px}
+.ordersBriefing{margin:22px 0;border:1px solid var(--line);border-radius:20px;padding:16px;background:rgba(255,255,255,.035);box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
+.orderLine{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);color:var(--muted)}
+.orderLine:last-child{border-bottom:0}
+.orderLine strong{color:var(--gold2);text-align:right}
+.currentMissionCard{background:radial-gradient(circle at top,rgba(240,210,122,.13),transparent 34%),linear-gradient(145deg,#2c2c31,#121214);border:1px solid rgba(200,162,58,.44);border-radius:28px;padding:30px;text-align:center;box-shadow:0 26px 70px rgba(0,0,0,.52),0 0 44px rgba(200,162,58,.10);animation:screenIn .28s ease forwards}
+.currentMissionCard .missionPeriod{display:inline-block;border:1px solid var(--gold);color:var(--gold2);padding:7px 14px;border-radius:999px;font-weight:900;margin-bottom:16px}
+.currentMissionCard h2{border:0;font-size:28px;margin-bottom:10px}
+.currentMissionCard p{color:var(--muted);font-size:17px;line-height:1.45}
+.currentMissionReward{color:var(--gold2);font-size:20px;font-weight:900;margin:18px 0}
+.missionQueue .missionCard{opacity:.55}
+.missionQueue .missionCard:first-child{opacity:.78}
+@media(max-width:850px){.ordersGreeting{font-size:21px}.orderLine{font-size:14px}.currentMissionCard{padding:22px 16px}.currentMissionCard h2{font-size:23px}}

@@ -1,18 +1,21 @@
-# RAS — The Game of Life V5.0.7
+# RAS — The Game of Life V5.2.0
 
-Correctif ciblé sur base stable :
-- Homme/Femme fonctionne visuellement ;
-- Femme = cheveux longs + barbe supprimée ;
-- couleur de peau visage + cou + bras ;
-- couleur de barbe ajoutée ;
-- barbe indépendante des cheveux.
+V5.2 — Les Ordres du Jour :
+- Ordres du Jour enrichis ;
+- accueil personnalisé avec le nom du personnage ;
+- résumé du jour : missions, boss, série, prochaine mission ;
+- les missions apparaissent désormais une par une ;
+- la mission actuelle est mise en avant ;
+- les missions restantes passent dans une file secondaire ;
+- les missions terminées restent en bas.
 
 ## Mise à jour GitHub
-Glisse tout dans GitHub puis Commit changes.
+Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
 
 ## Test
-1. Tout doit rester cliquable.
-2. Accès du Roi > Modifier personnage.
-3. Homme/Femme : femme = cheveux longs, pas de barbe.
-4. Peau : visage + bras changent.
-5. Couleur de barbe.
+1. Ouvre l’app : page Ordres du Jour.
+2. Vérifie le message “Bonjour [nom]”.
+3. Clique Commencer la journée.
+4. Vérifie qu’une seule mission est mise en avant.
+5. Clique Accomplir la mission : la suivante doit apparaître.
+6. Vérifie que la mission accomplie descend dans Missions terminées.
