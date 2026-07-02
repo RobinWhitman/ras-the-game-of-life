@@ -1,20 +1,36 @@
-# RAS — The Game of Life V5.6.2 ROLLBACK
+# RAS — The Game of Life V5.6.0
 
-Rollback d'urgence basé sur la V5.6.0 stable.
+V5.6 — Évolution du Héros :
+- l’avatar évolue selon le niveau ;
+- rangs ajoutés :
+  - 1 Aventurier
+  - 5 Éclaireur
+  - 10 Guerrier
+  - 20 Champion
+  - 30 Commandant
+  - 50 Seigneur
+  - 75 Légende
+  - 100 Roi
+- équipement progressif :
+  - ceinture/brassards
+  - cape
+  - épaulières
+  - armure
+  - accents dorés
+  - aura
+  - couronne
+- musculature/posture plus marquée à haut niveau ;
+- rang affiché sous l’avatar ;
+- animation d’évolution lors d’un changement de rang.
 
-Objectif :
-- restaurer l'application fonctionnelle ;
-- restaurer la création de personnage ;
-- restaurer le compagnon ;
-- restaurer les boutons ;
-- retirer les modifications instables de la V5.6.1.
+Note direction artistique :
+L’image fournie sert de cible future pour une refonte graphique plus poussée, sans génération d’image.
 
 ## Mise à jour GitHub
 Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
 
-## Test priorité
-1. Les boutons doivent répondre.
-2. Accès du Roi fonctionne.
-3. Création / modification personnage fonctionne.
-4. Compagnon visible.
-5. Avatar évolutif par niveau fonctionne comme en V5.6.0.
+## Test
+1. Vérifie que l’avatar affiche un rang.
+2. Utilise Accès du Roi / reset si besoin pour tester depuis zéro.
+3. Gagne de l’XP : à certains niveaux l’équipement change.
+4. Les fonctions existantes doivent rester stables.
