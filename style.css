@@ -1025,3 +1025,57 @@ body.qg-active .globalCompanion{
     max-width:220px !important;
   }
 }
+
+
+/* V5.3.5 — Companion placement final */
+.globalCompanion{
+  right:44px !important;
+  gap:0 !important;
+}
+.globalAvatarMini{
+  width:122px !important;
+  height:210px !important;
+  margin-left:-34px !important;
+  position:relative !important;
+  overflow:visible !important;
+}
+.globalAvatarMini .pixelHero{
+  position:absolute !important;
+  top:0 !important;
+  left:50% !important;
+  transform:translateX(-50%) scale(.54) !important;
+  transform-origin:top center !important;
+}
+@media(max-width:850px){
+  .globalCompanion{
+    right:8px !important;
+    top:8px !important;
+    gap:0 !important;
+    max-width:94vw !important;
+  }
+  .globalAvatarMini{
+    display:block !important;
+    width:74px !important;
+    height:126px !important;
+    margin-left:-20px !important;
+    position:relative !important;
+    overflow:visible !important;
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+  }
+  .globalAvatarMini .pixelHero{
+    display:block !important;
+    position:absolute !important;
+    top:0 !important;
+    left:50% !important;
+    transform:translateX(-50%) scale(.32) !important;
+    transform-origin:top center !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+  .globalDialogue{
+    max-width:235px !important;
+    margin-top:4px !important;
+  }
+}
