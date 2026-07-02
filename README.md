@@ -1,19 +1,36 @@
-# RAS — The Game of Life V5.5.0
+# RAS — The Game of Life V5.6.0
 
-V5.5 — Boss automatiques :
-- la progression Boss n’est plus modifiable manuellement ;
-- chaque mission accomplie inflige des dégâts au Boss ;
-- annuler une mission retire les dégâts si le Boss n’est pas vaincu ;
-- à 100 % : Boss vaincu ;
-- animation BOSS VAINCU ;
-- récompense : +150 XP et +75 Glory ;
-- changer de Boss remet la progression du nouveau Boss à 0.
+V5.6 — Évolution du Héros :
+- l’avatar évolue selon le niveau ;
+- rangs ajoutés :
+  - 1 Aventurier
+  - 5 Éclaireur
+  - 10 Guerrier
+  - 20 Champion
+  - 30 Commandant
+  - 50 Seigneur
+  - 75 Légende
+  - 100 Roi
+- équipement progressif :
+  - ceinture/brassards
+  - cape
+  - épaulières
+  - armure
+  - accents dorés
+  - aura
+  - couronne
+- musculature/posture plus marquée à haut niveau ;
+- rang affiché sous l’avatar ;
+- animation d’évolution lors d’un changement de rang.
+
+Note direction artistique :
+L’image fournie sert de cible future pour une refonte graphique plus poussée, sans génération d’image.
 
 ## Mise à jour GitHub
 Glisse tout le contenu du dossier extrait dans GitHub puis Commit changes.
 
 ## Test
-1. Va dans Boss : le champ progression doit être readonly.
-2. Accomplis une mission : la barre Boss doit monter.
-3. Atteins 100 % : animation Boss vaincu.
-4. Change de Boss : progression repart à 0.
+1. Vérifie que l’avatar affiche un rang.
+2. Utilise Accès du Roi / reset si besoin pour tester depuis zéro.
+3. Gagne de l’XP : à certains niveaux l’équipement change.
+4. Les fonctions existantes doivent rester stables.

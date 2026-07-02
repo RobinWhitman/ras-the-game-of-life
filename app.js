@@ -1,5 +1,5 @@
 
-const KEY="ras_v5_5_0";
+const KEY="ras_v5_6_0";
 const skillsMap={force:"⚔ Force",discipline:"🛡 Discipline",intelligence:"🧠 Intelligence",domination:"👑 Domination",sante:"❤️ Santé"};
 const bosses=[["HYROX — Être prêt pour le 12 juillet","Boss majeur","force"],["Training — 6 séances validées cette semaine","Mini Boss","force"],["RAS — Lancer une offre coaching claire","Boss business","domination"],["PHF — Structurer menu + catalogue + ventes","Boss business","domination"],["APEX — 6h formation dans la semaine","Boss savoir","intelligence"],["Hygiène — 30 jours brossage dents","Boss discipline","discipline"],["Nutrition — 5 repas/jour sur 7 jours","Boss santé","sante"]];
 const dailyMissions={0:["Training + Batch + Weekly Reset"],1:["Livraison PHF 8h-11h"],2:["Développement RAS"],3:["Batch cooking personnel"],4:["Vente PHF 11h-14h"],5:["Programmation sportive"],6:["Production PHF journée entière"]};
@@ -589,6 +589,7 @@ function render(){
   }
 
   if(document.getElementById("qgLevel")) qgLevel.textContent=l.level;
+  if(document.getElementById("heroRankQG")) heroRankQG.textContent=heroRank(l.level).name;
   if(document.getElementById("qgXpFill")) qgXpFill.style.width=`${Math.round(l.current/l.needed*100)}%`;
   if(document.getElementById("qgGlory")) qgGlory.textContent=(state.glory+c.glory)+" ⚜";
   if(document.getElementById("qgBoss")) qgBoss.textContent=bosses[state.bossIndex][0];
@@ -612,7 +613,12 @@ function renderShop(){let items=[["🍺 Petite bière",100],["🎮 1h Geek",200]
 function renderAchievements(){achievementList.innerHTML=achievements.map(([n,test])=>`<div class="item ${test(state)?"":"locked"}"><span>${test(state)?"🏆":"🔒"} ${n}</span><strong>${test(state)?"Débloqué":"Verrouillé"}</strong></div>`).join("")}
 function renderTrackers(){let last=state.history.slice(-31),last7=state.history.slice(-7);circle.innerHTML="";mandala.innerHTML="";for(let i=0;i<31;i++){let d=last[i];circle.innerHTML+=`<div class="dayDot ${d&&d.pct>=80?'done':''}">${i+1}</div>`;mandala.innerHTML+=`<div class="petal ${d&&d.pct>=80?'done':''}"></div>`}disciplineGraph.innerHTML=last7.map(d=>`<div class="stat"><span>${d.date}</span><strong>${d.pct}%</strong></div><div class="graphBar"><div style="width:${d.pct}%"></div></div>`).join("")||"<div class='muted'>Aucune donnée.</div>"}
 function renderWeekly(){let last7=state.history.slice(-7),xp=last7.reduce((a,b)=>a+b.xp,0),g=last7.reduce((a,b)=>a+b.glory,0),avg=last7.length?Math.round(last7.reduce((a,b)=>a+b.pct,0)/last7.length):0;weeklyStats.innerHTML=`<div class="stat"><span>Missions</span><strong>${last7.length}/7</strong></div><div class="stat"><span>XP</span><strong>+${xp}</strong></div><div class="stat"><span>Glory</span><strong>+${g} ⚜</strong></div><div class="stat"><span>Moyenne</span><strong>${avg}%</strong></div>`;weeklyStreaks.innerHTML=Object.entries(state.streaks).map(([k,v])=>`<div class="stat"><span>🔥 ${cap(k)}</span><strong>${v} j</strong></div>`).join("")}
-function saveDay(){let c=calc(),pct=c.total?Math.round(c.done/c.total*100):0,before=lvl(state.totalXp).level;state.totalXp+=c.xp;state.glory+=c.glory;Object.keys(c.sg).forEach(k=>state.skills[k]+=c.sg[k]);defaultObjectives.forEach(o=>{if(o.streak){if(state.done[o.id])state.streaks[o.streak]=(state.streaks[o.streak]||0)+1;else if(["training","sommeil","apex"].includes(o.streak))state.streaks[o.streak]=0}});state.history.push({date:new Date().toISOString().slice(0,10),xp:c.xp,glory:c.glory,pct,done:c.done,total:c.total,doneIds:c.ids,mainQuest:missionTitle.textContent||""});state.done={};save();displayXp=state.totalXp-c.xp;displayGlory=state.glory-c.glory;render();showMissionComplete(c.xp,c.glory);if(lvl(state.totalXp).level>before)setTimeout(()=>showLevelUp(lvl(state.totalXp).level),1800)}
+function saveDay(){let c=calc(),pct=c.total?Math.round(c.done/c.total*100):0,before=lvl(state.totalXp).level,beforeRank=heroRank(before).key;state.totalXp+=c.xp;state.glory+=c.glory;Object.keys(c.sg).forEach(k=>state.skills[k]+=c.sg[k]);defaultObjectives.forEach(o=>{if(o.streak){if(state.done[o.id])state.streaks[o.streak]=(state.streaks[o.streak]||0)+1;else if(["training","sommeil","apex"].includes(o.streak))state.streaks[o.streak]=0}});state.history.push({date:new Date().toISOString().slice(0,10),xp:c.xp,glory:c.glory,pct,done:c.done,total:c.total,doneIds:c.ids,mainQuest:missionTitle.textContent||""});state.done={};save();displayXp=state.totalXp-c.xp;displayGlory=state.glory-c.glory;render();showMissionComplete(c.xp,c.glory);if(lvl(state.totalXp).level>before){
+  const afterLevel=lvl(state.totalXp).level;
+  const afterRank=heroRank(afterLevel);
+  setTimeout(()=>showLevelUp(afterLevel),1800);
+  if(afterRank.key!==beforeRank) setTimeout(()=>showHeroEvolution(afterRank),3400);
+}}
 function resetDay(){state.done={};save();render()}
 function buy(n,c){if(state.glory<c){alert("Pas assez de Glory.");return}state.glory-=c;state.gloryLog.push({date:new Date().toISOString().slice(0,10),name:n,cost:c});save();playSound("buy");flash("ACHAT CONFIRMÉ");render()}
 function flash(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1200)}
@@ -843,15 +849,46 @@ function modifyCharacter(){
     updateAvatarPreview();
   },50);
 }
+
+function heroRank(level){
+  if(level>=100) return {key:"rank-king",name:"Roi",desc:"Armure royale débloquée."};
+  if(level>=75) return {key:"rank-legend",name:"Légende",desc:"Équipement légendaire débloqué."};
+  if(level>=50) return {key:"rank-lord",name:"Seigneur",desc:"Armure noble débloquée."};
+  if(level>=30) return {key:"rank-commander",name:"Commandant",desc:"Armure noire et or débloquée."};
+  if(level>=20) return {key:"rank-champion",name:"Champion",desc:"Armure renforcée débloquée."};
+  if(level>=10) return {key:"rank-warrior",name:"Guerrier",desc:"Cape et cuir renforcé débloqués."};
+  if(level>=5) return {key:"rank-scout",name:"Éclaireur",desc:"Brassards et ceinture débloqués."};
+  return {key:"rank-adventurer",name:"Aventurier",desc:"Tenue simple d'aventurier."};
+}
+function heroRankForXp(xp){
+  return heroRank(lvl(xp).level);
+}
+function showHeroEvolution(rank){
+  if(!document.getElementById("heroEvolutionOverlay")) return;
+  heroEvolutionRank.textContent=rank.name;
+  heroEvolutionDesc.textContent=rank.desc;
+  heroEvolutionOverlay.classList.add("show");
+  playSound("level");
+  companionSpeak("level");
+  setTimeout(()=>heroEvolutionOverlay.classList.remove("show"),2600);
+}
+
 function avatarHTML(){
   const p=state.player||{name:"Robin",gender:"gender-male",skin:"skin-light",hair:"hair-dark",beard:"beard-full",beardColor:"beard-dark",eyes:"eyes-brown",tattoos:"tattoos-yes"};
-  return `<div class="avatar pixelHero ${p.gender||'gender-male'} ${p.skin} ${p.hair} ${p.beard} ${p.beardColor||'beard-dark'} ${p.eyes} ${p.tattoos}">
+  const rank=heroRankForXp(state.totalXp);
+  return `<div class="avatar pixelHero ${rank.key} ${p.gender||'gender-male'} ${p.skin} ${p.hair} ${p.beard} ${p.beardColor||'beard-dark'} ${p.eyes} ${p.tattoos}">
+    <div class="px aura"></div>
+    <div class="px cape"></div>
     <div class="px hair"></div><div class="px head"></div><div class="px ear left"></div><div class="px ear right"></div>
     <div class="px eye left"></div><div class="px eye right"></div><div class="px beard"></div><div class="px neck"></div>
-    <div class="px torso"></div><div class="px arm left"></div><div class="px arm right"></div>
+    <div class="px torso"></div><div class="px chestArmor"></div><div class="px belt"></div>
+    <div class="px shoulder left"></div><div class="px shoulder right"></div>
+    <div class="px arm left"></div><div class="px arm right"></div>
+    <div class="px bracer left"></div><div class="px bracer right"></div>
     <div class="px tattoo left"></div><div class="px tattoo right"></div><div class="px legs"></div><div class="px legGap"></div>
     <div class="px boot left"></div><div class="px boot right"></div>
-  </div><div class="avatarName">${p.name||"Robin"}</div>`;
+    <div class="px crown"></div>
+  </div><div class="avatarName">${p.name||"Robin"}</div><div class="avatarRank">${rank.name}</div>`;
 }
 
 function openKingAccess(){

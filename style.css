@@ -1450,3 +1450,214 @@ body.qg-active .globalAvatarMini{
 .bossBar .fill.defeated{
   background:linear-gradient(90deg,#7d2222,#c83d3d,#f0d27a);
 }
+
+
+/* V5.6.0 — Évolution du Héros */
+.avatarRank{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:1px;
+  margin-top:-6px;
+  text-transform:uppercase;
+}
+.heroRankQG{
+  color:var(--gold2);
+  font-weight:900;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin:10px 0 4px;
+}
+
+/* Equipment layers hidden by default */
+.pixelHero .cape,
+.pixelHero .chestArmor,
+.pixelHero .belt,
+.pixelHero .shoulder,
+.pixelHero .bracer,
+.pixelHero .crown,
+.pixelHero .aura{
+  display:none;
+}
+
+/* Rank 5 — scout: belt + bracers */
+.rank-scout .belt,
+.rank-warrior .belt,
+.rank-champion .belt,
+.rank-commander .belt,
+.rank-lord .belt,
+.rank-legend .belt,
+.rank-king .belt{
+  display:block;
+  left:43px;top:222px;width:82px;height:10px;background:#5b3522;z-index:6;
+}
+.rank-scout .bracer,
+.rank-warrior .bracer,
+.rank-champion .bracer,
+.rank-commander .bracer,
+.rank-lord .bracer,
+.rank-legend .bracer,
+.rank-king .bracer{
+  display:block;
+  top:205px;width:20px;height:14px;background:#5b3522;z-index:7;
+}
+.pixelHero .bracer.left{left:24px}
+.pixelHero .bracer.right{right:24px}
+
+/* Rank 10 — warrior: cape */
+.rank-warrior .cape,
+.rank-champion .cape,
+.rank-commander .cape,
+.rank-lord .cape,
+.rank-legend .cape,
+.rank-king .cape{
+  display:block;
+  left:30px;top:130px;width:108px;height:154px;background:#532420;z-index:-1;
+  clip-path:polygon(20% 0,80% 0,100% 100%,0 100%);
+  filter:drop-shadow(0 12px 12px rgba(0,0,0,.35));
+}
+
+/* Rank 20 — champion: shoulders + armor */
+.rank-champion .shoulder,
+.rank-commander .shoulder,
+.rank-lord .shoulder,
+.rank-legend .shoulder,
+.rank-king .shoulder{
+  display:block;
+  top:146px;width:34px;height:26px;background:#777;z-index:8;
+}
+.pixelHero .shoulder.left{left:28px}
+.pixelHero .shoulder.right{right:28px}
+.rank-champion .chestArmor,
+.rank-commander .chestArmor,
+.rank-lord .chestArmor,
+.rank-legend .chestArmor,
+.rank-king .chestArmor{
+  display:block;
+  left:46px;top:160px;width:76px;height:70px;background:linear-gradient(180deg,#666,#343434);z-index:5;
+  clip-path:polygon(8% 0,92% 0,100% 100%,0 100%);
+}
+
+/* Rank 30 — commander: black/gold */
+.rank-commander .chestArmor,
+.rank-lord .chestArmor,
+.rank-legend .chestArmor,
+.rank-king .chestArmor{
+  background:linear-gradient(180deg,#1c1c1e,#080808) !important;
+  border-top:5px solid #c8a23a;
+}
+.rank-commander .shoulder,
+.rank-lord .shoulder,
+.rank-legend .shoulder,
+.rank-king .shoulder{
+  background:#111 !important;
+  border-bottom:5px solid #c8a23a;
+}
+.rank-commander .cape,
+.rank-lord .cape,
+.rank-legend .cape,
+.rank-king .cape{
+  background:#1c1414 !important;
+}
+
+/* Rank 50 — lord: gold accents */
+.rank-lord .belt,
+.rank-legend .belt,
+.rank-king .belt{
+  background:#c8a23a !important;
+}
+.rank-lord .bracer,
+.rank-legend .bracer,
+.rank-king .bracer{
+  background:#c8a23a !important;
+}
+.rank-lord .chestArmor:after,
+.rank-legend .chestArmor:after,
+.rank-king .chestArmor:after{
+  content:"";
+  position:absolute;
+  left:32px;top:8px;width:12px;height:44px;background:#c8a23a;
+}
+
+/* Rank 75 — legend: aura */
+.rank-legend .aura,
+.rank-king .aura{
+  display:block;
+  left:10px;top:20px;width:148px;height:278px;border-radius:50%;
+  background:radial-gradient(circle,rgba(240,210,122,.16),transparent 64%);
+  z-index:-2;
+  animation:qgLightPulse 4s ease-in-out infinite;
+}
+
+/* Rank 100 — king: crown */
+.rank-king .crown{
+  display:block;
+  left:60px;top:-4px;width:48px;height:24px;background:#c8a23a;z-index:10;
+  clip-path:polygon(0 100%,0 42%,18% 70%,35% 12%,50% 68%,65% 12%,82% 70%,100% 42%,100% 100%);
+  filter:drop-shadow(0 0 10px rgba(240,210,122,.5));
+}
+
+/* Musculature/posture progression */
+.rank-champion .torso,
+.rank-commander .torso,
+.rank-lord .torso,
+.rank-legend .torso,
+.rank-king .torso{
+  left:31px !important;
+  width:106px !important;
+}
+.rank-commander .arm.left,
+.rank-lord .arm.left,
+.rank-legend .arm.left,
+.rank-king .arm.left{left:16px !important;width:32px !important}
+.rank-commander .arm.right,
+.rank-lord .arm.right,
+.rank-legend .arm.right,
+.rank-king .arm.right{right:16px !important;width:32px !important}
+
+.heroEvolutionOverlay{
+  position:fixed;
+  inset:0;
+  z-index:965;
+  background:rgba(0,0,0,.84);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  visibility:hidden;
+  transition:.25s ease;
+}
+.heroEvolutionOverlay.show{
+  opacity:1;
+  visibility:visible;
+}
+.heroEvolutionBox{
+  width:min(560px,88vw);
+  border:1px solid var(--gold);
+  border-radius:28px;
+  padding:42px 28px;
+  text-align:center;
+  background:radial-gradient(circle at top,rgba(240,210,122,.18),#101010 60%);
+  box-shadow:0 0 90px rgba(200,162,58,.24),0 30px 90px rgba(0,0,0,.65);
+}
+.heroEvolutionTitle{
+  display:inline-block;
+  padding:10px 18px;
+  border-radius:999px;
+  background:linear-gradient(180deg,var(--gold2),var(--gold));
+  color:#111;
+  font-weight:900;
+  letter-spacing:2px;
+  margin-bottom:20px;
+}
+.heroEvolutionRank{
+  color:var(--gold2);
+  font-size:34px;
+  font-weight:900;
+  margin-bottom:12px;
+}
+.heroEvolutionDesc{
+  color:var(--text);
+  font-size:20px;
+  font-weight:900;
+}
