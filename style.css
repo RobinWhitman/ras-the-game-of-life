@@ -533,3 +533,74 @@ input,textarea,select{width:100%;background:#101010;color:var(--text);border:1px
     position:relative;
   }
 }
+
+
+/* V5.0.3 — QG avatar layout fix */
+#qgAvatarMount{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  margin:6px auto 12px;
+}
+#qgAvatarMount .avatarName{
+  margin-top:10px;
+  position:relative;
+  z-index:4;
+}
+#qgAvatarMount .pixelHero{
+  margin-bottom:18px !important;
+}
+
+/* V5.0.3 — Better pixel tattoos */
+.pixelHero .tattoo{
+  width:22px;
+  height:54px;
+  background:transparent;
+  opacity:.92;
+}
+.pixelHero .tattoo:before,
+.pixelHero .tattoo:after{
+  content:"";
+  position:absolute;
+  background:#111;
+}
+.pixelHero .tattoo.left:before{
+  left:4px;top:2px;width:7px;height:7px;
+  box-shadow:
+    7px 7px 0 #111,
+    0 14px 0 #111,
+    10px 22px 0 #111,
+    3px 31px 0 #111,
+    12px 41px 0 #111;
+}
+.pixelHero .tattoo.left:after{
+  left:13px;top:5px;width:4px;height:4px;
+  box-shadow:
+    -8px 10px 0 #111,
+    0 18px 0 #111,
+    -6px 29px 0 #111,
+    2px 39px 0 #111;
+}
+.pixelHero .tattoo.right:before{
+  right:4px;top:2px;width:7px;height:7px;
+  box-shadow:
+    -7px 7px 0 #111,
+    0 14px 0 #111,
+    -10px 22px 0 #111,
+    -3px 31px 0 #111,
+    -12px 41px 0 #111;
+}
+.pixelHero .tattoo.right:after{
+  right:13px;top:5px;width:4px;height:4px;
+  box-shadow:
+    8px 10px 0 #111,
+    0 18px 0 #111,
+    6px 29px 0 #111,
+    -2px 39px 0 #111;
+}
+.pixelHero .tattoo.left{left:21px;top:176px}
+.pixelHero .tattoo.right{right:21px;top:176px}
+.tattoos-no .tattoo,
+.tattoos-no .tattoo:before,
+.tattoos-no .tattoo:after{display:none}
